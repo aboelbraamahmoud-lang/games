@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لعبة فرقع البالونات التعليمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --bg-color: #E0F2FE;
+            --text-main: #1E293B;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Background Themes */
+        .bg-sky { background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%); }
+        .bg-carnival { background: repeating-linear-gradient(45deg, #FFB6C1, #FFB6C1 20px, #FFF0F5 20px, #FFF0F5 40px); }
+        .bg-night { background: linear-gradient(180deg, #1A2980 0%, #26D0CE 100%); color: white !important;}
+        .bg-islamic { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        
+        .bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.8) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(-2deg); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.8; filter: brightness(1.5); }
+            100% { transform: scale(0); opacity: 0; display: none; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(251, 191, 36, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+        }
+
+        /* Balloon Styling */
+        .balloon-container {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .balloon-container:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .balloon {
+            width: 120px;
+            height: 140px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), 5px 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .balloon::after { /* Balloon string */
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 35px;
+            background-color: rgba(255,255,255,0.7);
+            z-index: -1;
+        }
+        
+        .balloon::before { /* Balloon knot */
+            content: '▲';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: inherit;
+            font-size: 14px;
+            text-shadow: 0 2px 2px rgba(0,0,0,0.2);
+        }
+
+        .balloon-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        .balloon.popping {
+            animation: pop 0.2s forwards ease-out;
+        }
+
+        /* UI Elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 1.5rem;
+        }
+
+        .btn-3d {
+            transition: all 0.1s;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.2);
+            position: relative;
+            top: 0;
+        }
+        
+        .btn-3d:active {
+            top: 6px;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.2);
+        }
+
+        .screen { display: none; }
+        .screen.active { display: flex; animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        .shake-err { animation: shake 0.5s; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-bottom-20{bottom:-5rem}.-left-20{left:-5rem}.-right-20{right:-5rem}.-top-20{top:-5rem}.bottom-4{bottom:1rem}.left-0{left:0px}.right-4{right:1rem}.top-0{top:0px}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[60\]{z-index:60}.mx-auto{margin-left:auto;margin-right:auto}.mx-2{margin-left:0.5rem;margin-right:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-2{margin-left:0.5rem}.mr-4{margin-right:1rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-16{height:4rem}.h-24{height:6rem}.h-32{height:8rem}.h-64{height:16rem}.h-full{height:100%}.h-5{height:1.25rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-1\/2{width:50%}.w-1\/3{width:33.333333%}.w-10{width:2.5rem}.w-11\/12{width:91.666667%}.w-14{width:3.5rem}.w-16{width:4rem}.w-2\/3{width:66.666667%}.w-24{width:6rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-full{width:100%}.w-5{width:1.25rem}.min-w-\[200px\]{min-width:200px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-6xl{max-width:72rem}.shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.border-collapse{border-collapse:collapse}.-rotate-90{--tw-rotate:-90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-95{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-t{border-top-width:1px}.border-blue-300{--tw-border-opacity:1;border-color:rgb(147 197 253 / var(--tw-border-opacity, 1))}.border-blue-400{--tw-border-opacity:1;border-color:rgb(96 165 250 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-green-400{--tw-border-opacity:1;border-color:rgb(74 222 128 / var(--tw-border-opacity, 1))}.border-red-200{--tw-border-opacity:1;border-color:rgb(254 202 202 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.border-slate-600{--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-red-600{--tw-border-opacity:1;border-color:rgb(220 38 38 / var(--tw-border-opacity, 1))}.border-gray-800{--tw-border-opacity:1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-\[\#007AFF\]{--tw-bg-opacity:1;background-color:rgb(0 122 255 / var(--tw-bg-opacity, 1))}.bg-\[\#4CD964\]{--tw-bg-opacity:1;background-color:rgb(76 217 100 / var(--tw-bg-opacity, 1))}.bg-\[\#5856D6\]{--tw-bg-opacity:1;background-color:rgb(88 86 214 / var(--tw-bg-opacity, 1))}.bg-\[\#5AC8FA\]{--tw-bg-opacity:1;background-color:rgb(90 200 250 / var(--tw-bg-opacity, 1))}.bg-\[\#FF2D55\]{--tw-bg-opacity:1;background-color:rgb(255 45 85 / var(--tw-bg-opacity, 1))}.bg-\[\#FF3B30\]{--tw-bg-opacity:1;background-color:rgb(255 59 48 / var(--tw-bg-opacity, 1))}.bg-\[\#FF9500\]{--tw-bg-opacity:1;background-color:rgb(255 149 0 / var(--tw-bg-opacity, 1))}.bg-\[\#FFCC00\]{--tw-bg-opacity:1;background-color:rgb(255 204 0 / var(--tw-bg-opacity, 1))}.bg-black\/30{background-color:rgb(0 0 0 / 0.3)}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-300{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-green-200{--tw-bg-opacity:1;background-color:rgb(187 247 208 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-indigo-900{--tw-bg-opacity:1;background-color:rgb(49 46 129 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-sky-300{--tw-bg-opacity:1;background-color:rgb(125 211 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/30{background-color:rgb(255 255 255 / 0.3)}.bg-white\/50{background-color:rgb(255 255 255 / 0.5)}.bg-yellow-100{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.bg-yellow-400{--tw-bg-opacity:1;background-color:rgb(250 204 21 / var(--tw-bg-opacity, 1))}.bg-yellow-50{--tw-bg-opacity:1;background-color:rgb(254 252 232 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-slate-700{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.object-contain{object-fit:contain}.p-1{padding:0.25rem}.p-10{padding:2.5rem}.p-16{padding:4rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-16{padding-left:4rem;padding-right:4rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-2{padding-bottom:0.5rem}.pb-4{padding-bottom:1rem}.pr-2{padding-right:0.5rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-7xl{font-size:4.5rem;line-height:1}.text-9xl{font-size:8rem;line-height:1}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.leading-tight{line-height:1.25}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-purple-500{--tw-text-opacity:1;color:rgb(168 85 247 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-800{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-300{--tw-text-opacity:1;color:rgb(253 224 71 / var(--tw-text-opacity, 1))}.text-yellow-400{--tw-text-opacity:1;color:rgb(250 204 21 / var(--tw-text-opacity, 1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4 / var(--tw-text-opacity, 1))}.text-yellow-900{--tw-text-opacity:1;color:rgb(113 63 18 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.opacity-70{opacity:0.7}.mix-blend-multiply{mix-blend-mode:multiply}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-gray-400{--tw-ring-opacity:1;--tw-ring-color:rgb(156 163 175 / var(--tw-ring-opacity, 1))}.blur-2xl{--tw-blur:blur(40px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0_0_15px_rgba\(250\2c 204\2c 21\2c 0\.8\)\]{--tw-drop-shadow:drop-shadow(0 0 15px rgba(250,204,21,0.8));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-lg{--tw-drop-shadow:drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-md{--tw-drop-shadow:drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-blue-400:hover{--tw-border-opacity:1;border-color:rgb(96 165 250 / var(--tw-border-opacity, 1))}.hover\:bg-blue-200:hover{--tw-bg-opacity:1;background-color:rgb(191 219 254 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-400:hover{--tw-bg-opacity:1;background-color:rgb(96 165 250 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-400:hover{--tw-bg-opacity:1;background-color:rgb(156 163 175 / var(--tw-bg-opacity, 1))}.hover\:bg-green-400:hover{--tw-bg-opacity:1;background-color:rgb(74 222 128 / var(--tw-bg-opacity, 1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.hover\:bg-purple-200:hover{--tw-bg-opacity:1;background-color:rgb(233 213 255 / var(--tw-bg-opacity, 1))}.hover\:bg-red-200:hover{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.hover\:bg-red-500:hover{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-300:hover{--tw-bg-opacity:1;background-color:rgb(253 224 71 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-50:hover{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-50:hover{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:text-blue-500:hover{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.hover\:text-red-800:hover{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}.hover\:text-blue-700:hover{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.hover\:text-red-700:hover{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:opacity-80:hover{opacity:0.8}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.focus\:border-blue-600:focus{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.focus\:border-red-600:focus{--tw-border-opacity:1;border-color:rgb(220 38 38 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.group:hover .group-hover\:animate-bounce{animation:bounce 1s infinite}.group:hover .group-hover\:bg-black\/10{background-color:rgb(0 0 0 / 0.1)}.group:hover .group-hover\:bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.group:hover .group-hover\:bg-white\/30{background-color:rgb(255 255 255 / 0.3)}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:w-1\/3{width:33.333333%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:p-12{padding:3rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-8xl{font-size:6rem;line-height:1}}</style></head>
+<body class="min-h-screen flex flex-col relative transition-colors duration-500 bg-sky">
+    <div class="bg-pattern"></div>
+
+    <header id="main-header" class="w-full glass-panel mx-auto max-w-6xl mt-4 p-4 flex justify-between items-center z-40 transition-all" style="display: flex;">
+        <div class="flex items-center gap-4">
+            <!-- Ministry Logo Placeholder (SVG) -->
+            <div class="w-16 h-16 bg-white rounded-full p-1 shadow-inner border-2 border-gray-200 flex items-center justify-center cursor-pointer" onclick="document.getElementById('logo-upload').click()" title="تغيير الشعار">
+                <img id="ministry-logo" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='45' fill='%238b1538'/&gt;&lt;path d='M30,70 L50,30 L70,70 Z' fill='white'/&gt;&lt;/svg&gt;" class="w-full h-full object-contain rounded-full" alt="شعار">
+                <input type="file" id="logo-upload" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+            </div>
+            <div>
+                <h1 id="header-school-name" class="text-xl font-bold text-gray-800">مدرسة عبد الله بن زيد آل محمود النموذجية</h1>
+                <h2 id="header-department" class="text-md text-gray-600">قسم التربية الإسلامية</h2>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleAudio()" class="text-2xl text-gray-600 hover:text-blue-500 transition btn-3d bg-white p-3 rounded-full w-14 h-14 flex items-center justify-center">
+                <i id="audio-icon" class="fas fa-volume-up"></i>
+            </button>
+            <button onclick="toggleFullScreen()" class="text-2xl text-gray-600 hover:text-blue-500 transition btn-3d bg-white p-3 rounded-full w-14 h-14 flex items-center justify-center">
+                <i class="fas fa-expand"></i>
+            </button>
+            <!-- Teacher Dashboard Button (Will be removed in student export) -->
+            
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 relative w-full h-full">
+
+        <!-- Splash / Start Screen -->
+        <div id="screen-splash" class="screen flex-col items-center justify-center text-center max-w-3xl w-full">
+            <h1 id="game-main-title" class="text-6xl md:text-8xl font-black text-white drop-shadow-lg mb-6 leading-tight" style="-webkit-text-stroke: 2px #4F46E5;">لعبة فرقع البالونات</h1>
+            <p id="game-sub-title" class="text-2xl md:text-3xl font-bold text-yellow-300 drop-shadow-md mb-12">
+                تعلم وامرح!
+            </p>
+            <button onclick="showScreen('screen-mode-select')" class="bg-yellow-400 hover:bg-yellow-300 text-yellow-900 text-4xl font-bold py-6 px-16 rounded-full btn-3d border-4 border-white shadow-xl animate-bounce">
+                ابـــــدأ اللعـــــب <i class="fas fa-play mr-4"></i>
+            </button>
+        </div>
+
+        <!-- Mode Selection Screen -->
+        <div id="screen-mode-select" class="screen flex-col items-center justify-center w-full max-w-4xl">
+            <h2 class="text-5xl font-bold text-white drop-shadow-lg mb-12">اختر طريقة اللعب</h2>
+            <div class="flex flex-col md:flex-row gap-8 w-full justify-center">
+                <button onclick="setupGame('solo')" class="glass-panel p-10 flex flex-col items-center btn-3d hover:scale-105 group w-full md:w-1/3">
+                    <i class="fas fa-user text-7xl text-blue-500 mb-6 group-hover:animate-bounce"></i>
+                    <span class="text-3xl font-bold">لاعب واحد</span>
+                </button>
+                <button onclick="setupGame('team')" class="glass-panel p-10 flex flex-col items-center btn-3d hover:scale-105 group w-full md:w-1/3">
+                    <i class="fas fa-users text-7xl text-green-500 mb-6 group-hover:animate-bounce"></i>
+                    <span class="text-3xl font-bold">فريقان</span>
+                </button>
+            </div>
+            <button onclick="showScreen('screen-splash')" class="mt-12 text-2xl bg-white text-gray-700 py-3 px-8 rounded-full btn-3d">عودة</button>
+        </div>
+
+        <!-- Player/Team Names Setup Screen -->
+        <div id="screen-names" class="screen flex-col items-center justify-center w-full max-w-2xl glass-panel p-10">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8" id="names-title">اسم اللاعب</h2>
+            
+            <div id="solo-name-input" class="w-full mb-6">
+                <label class="block text-2xl font-bold mb-3">اسم البطل:</label>
+                <input type="text" id="player-name" class="w-full p-4 text-2xl rounded-xl border-2 border-blue-300 text-center focus:outline-none focus:border-blue-500" value="بطل المستقبل">
+            </div>
+
+            <div id="team-names-input" class="w-full mb-6 hidden flex flex-col gap-6">
+                <div>
+                    <label class="block text-2xl font-bold mb-3 text-blue-600">اسم الفريق الأول:</label>
+                    <input type="text" id="team1-name" class="w-full p-4 text-2xl rounded-xl border-2 border-blue-400 text-center focus:outline-none focus:border-blue-600 bg-blue-50" value="الفريق الأزرق">
+                </div>
+                <div>
+                    <label class="block text-2xl font-bold mb-3 text-red-600">اسم الفريق الثاني:</label>
+                    <input type="text" id="team2-name" class="w-full p-4 text-2xl rounded-xl border-2 border-red-400 text-center focus:outline-none focus:border-red-600 bg-red-50" value="الفريق الأحمر">
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full mt-6">
+                <button onclick="showScreen('screen-mode-select')" class="w-1/3 bg-gray-300 hover:bg-gray-400 text-xl font-bold py-4 rounded-xl btn-3d">رجوع</button>
+                <button onclick="startGame()" class="w-2/3 bg-green-500 hover:bg-green-400 text-white text-2xl font-bold py-4 rounded-xl btn-3d">انطلق! <i class="fas fa-rocket ml-2"></i></button>
+            </div>
+        </div>
+
+        <!-- Main Game Board Screen -->
+        <div id="screen-game" class="screen flex-col w-full h-full relative">
+            
+            <!-- In-Game Scoreboard -->
+            <div class="glass-panel mx-auto w-full max-w-5xl mb-6 flex justify-between items-center p-4 relative z-10">
+                <!-- Team 1 / Solo -->
+                <div id="score-box-1" class="flex flex-col items-center bg-blue-100 px-8 py-3 rounded-2xl border-4 border-blue-400 min-w-[200px] transition-transform">
+                    <span id="display-name-1" class="text-2xl font-bold text-blue-800">بطل المستقبل</span>
+                    <span id="display-score-1" class="text-5xl font-black text-blue-600">0</span>
+                </div>
+                
+                <!-- Turn Indicator & Timer -->
+                <div class="flex flex-col items-center flex-grow">
+                    <div id="turn-indicator" class="text-2xl font-bold text-gray-800 bg-white px-6 py-2 rounded-full shadow-md mb-2 hidden">دور: الفريق الأزرق</div>
+                    
+                    <div id="timer-container" class="relative w-24 h-24 flex items-center justify-center bg-white rounded-full shadow-lg border-4 border-gray-200">
+                        <span id="timer-text" class="text-4xl font-black text-gray-700">14</span>
+                        <svg class="absolute top-0 left-0 w-full h-full -rotate-90">
+                            <circle cx="44" cy="44" r="40" fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
+                            <circle id="timer-circle" cx="44" cy="44" r="40" fill="none" stroke="#EF4444" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="0" style="transition: stroke-dashoffset 1s linear; stroke-dashoffset: 16.7333; stroke: rgb(59, 130, 246);"></circle>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Team 2 (Hidden in Solo) -->
+                <div id="score-box-2" class="flex flex-col items-center bg-red-100 px-8 py-3 rounded-2xl border-4 border-red-400 min-w-[200px] transition-transform hidden">
+                    <span id="display-name-2" class="text-2xl font-bold text-red-800">الفريق الثاني</span>
+                    <span id="display-score-2" class="text-5xl font-black text-red-600">0</span>
+                </div>
+            </div>
+
+            <!-- Balloons Area -->
+            <div id="balloons-area" class="flex-grow flex flex-wrap justify-center items-center gap-12 p-8 overflow-y-auto"><div class="balloon-container" style="animation-delay: 0.914602s;"><div class="balloon" style="background-color: rgb(90, 200, 250); color: rgb(90, 200, 250);"><span class="balloon-number" style="color: rgb(0, 0, 0);">1</span></div></div><div class="balloon-container" style="animation-delay: 1.12258s; visibility: hidden;"><div class="balloon popping" style="background-color: rgb(0, 122, 255); color: rgb(0, 122, 255);"><span class="balloon-number" style="color: rgb(255, 255, 255);">2</span></div></div><div class="balloon-container" style="animation-delay: 0.611931s;"><div class="balloon" style="background-color: rgb(255, 59, 48); color: rgb(255, 59, 48);"><span class="balloon-number" style="color: rgb(255, 255, 255);">3</span></div></div><div class="balloon-container" style="animation-delay: 0.13752s; visibility: hidden;"><div class="balloon popping" style="background-color: rgb(88, 86, 214); color: rgb(88, 86, 214);"><span class="balloon-number" style="color: rgb(255, 255, 255);"><i class="fas fa-star text-yellow-300 text-3xl"></i></span></div></div><div class="balloon-container" style="animation-delay: 1.94918s;"><div class="balloon" style="background-color: rgb(224, 36, 206); color: rgb(224, 36, 206);"><span class="balloon-number" style="color: rgb(255, 255, 255);">5</span></div></div><div class="balloon-container" style="animation-delay: 0.119831s;"><div class="balloon" style="background-color: rgb(90, 200, 250); color: rgb(90, 200, 250);"><span class="balloon-number" style="color: rgb(0, 0, 0);">6</span></div></div></div>
+            
+            <button onclick="endGameEarly()" class="absolute bottom-4 right-4 bg-white text-gray-600 py-2 px-4 rounded-full shadow-md hover:bg-gray-100 z-10">إنهاء اللعبة</button>
+        </div>
+
+        <!-- Question Modal -->
+        <div id="modal-question" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div id="question-card" class="bg-white w-11/12 max-w-4xl rounded-3xl shadow-2xl p-8 md:p-12 transform scale-95 transition-transform duration-300 flex flex-col relative overflow-hidden">
+                <!-- Background decoration for modal -->
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
+                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-yellow-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
+
+                <div class="relative z-10 flex-grow flex flex-col justify-center">
+                    <div class="flex justify-between items-center mb-6 border-b-2 border-gray-100 pb-4">
+                        <span class="text-xl font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-full">سؤال <span id="q-number-display">2</span></span>
+                        <span id="q-points-display" class="text-xl font-bold text-yellow-600 bg-yellow-50 px-4 py-2 rounded-full"><i class="fas fa-star text-yellow-400"></i> 15 نقطة</span>
+                    </div>
+
+                    <h2 id="q-text" class="text-4xl md:text-5xl font-black text-center text-gray-800 mb-12 leading-tight">من هو خاتم الأنبياء والمرسلين؟</h2>
+
+                    <!-- Options Container -->
+                    <div id="q-options" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"><button class="w-full py-6 px-4 text-2xl font-bold bg-gray-50 border-4 border-gray-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all btn-3d shadow-md">موسى عليه السلام</button><button class="w-full py-6 px-4 text-2xl font-bold bg-red-500 border-4 border-red-600 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all btn-3d shadow-md text-white">عيسى عليه السلام</button><button class="w-full py-6 px-4 text-2xl font-bold bg-gray-50 border-4 border-gray-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all btn-3d shadow-md">إبراهيم عليه السلام</button><button class="w-full py-6 px-4 text-2xl font-bold bg-green-100 border-4 border-green-400 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all btn-3d shadow-md">محمد صلى الله عليه وسلم</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result/Win Screen -->
+        <div id="screen-result" class="screen flex-col items-center justify-center w-full h-full absolute inset-0 bg-black/80 z-50">
+            <div class="glass-panel p-16 text-center flex flex-col items-center relative overflow-hidden w-11/12 max-w-4xl">
+                <i class="fas fa-trophy text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-bounce"></i>
+                <h1 id="winner-text" class="text-6xl font-black text-gray-800 mb-4">الفائز هو!</h1>
+                <p id="winner-subtext" class="text-3xl font-bold text-gray-600 mb-10">النقاط: 100</p>
+                <div class="flex gap-6">
+                    <button onclick="resetToSplash()" class="bg-blue-500 hover:bg-blue-400 text-white text-2xl font-bold py-4 px-10 rounded-full btn-3d">لعب مرة أخرى</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard (Will be removed in Student Export) -->
+        
+
+        <!-- Question Editor Modal -->
+        <div id="modal-edit-question" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden" style="display: none;">
+            <div class="bg-white w-11/12 max-w-2xl rounded-2xl shadow-2xl p-6 flex flex-col max-h-[90vh]">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2" id="edit-q-title">تعديل السؤال</h2>
+                
+                <div class="overflow-y-auto pr-2 flex-grow">
+                    <input type="hidden" id="eq-id" value="2">
+                    
+                    <div class="mb-4">
+                        <label class="block font-bold mb-1">نص السؤال</label>
+                        <textarea id="eq-text" class="w-full p-2 border rounded focus:border-blue-500 outline-none h-24" placeholder="اكتب السؤال هنا..."></textarea>
+                    </div>
+
+                    <div class="flex gap-4 mb-4">
+                        <div class="w-1/2">
+                            <label class="block font-bold mb-1">نوع السؤال</label>
+                            <select id="eq-type" class="w-full p-2 border rounded" onchange="toggleQuestionOptionsUI()">
+                                <option value="mcq">اختيار من متعدد</option>
+                                <option value="tf">صح أو خطأ</option>
+                            </select>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block font-bold mb-1">نقاط السؤال</label>
+                            <input type="number" id="eq-points" class="w-full p-2 border rounded" value="10">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-bold mb-2">لون البالونة (عشوائي افتراضياً)</label>
+                        <div id="eq-color-picker" class="flex gap-2 flex-wrap"><button class="w-10 h-10 rounded-full border-2 flex items-center justify-center text-xs font-bold border-gray-300 shadow bg-gray-100 text-gray-500" title="عشوائي" type="button">?</button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(255, 59, 48);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(255, 149, 0);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(255, 204, 0);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-gray-800 ring-2 ring-gray-400 scale-110" type="button" style="background-color: rgb(76, 217, 100);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(90, 200, 250);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(0, 122, 255);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(88, 86, 214);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(255, 45, 85);"></button><button class="w-10 h-10 rounded-full border-2 shadow transition-transform border-transparent hover:scale-105" type="button" style="background-color: rgb(224, 36, 206);"></button></div>
+                    </div>
+
+                    <div id="eq-options-container" class="mb-4 p-4 bg-gray-50 rounded border">
+                        <label class="block font-bold mb-2">الخيارات (حدد الإجابة الصحيحة بالدائرة)</label>
+                        
+                        <!-- Options list -->
+                        <div id="eq-options-list" class="flex flex-col gap-2"><div class="flex items-center gap-3 bg-white p-2 rounded border"><input type="radio" name="eq-correct-idx" value="0" class="w-5 h-5 cursor-pointer"><input type="text" class="flex-grow p-2 border rounded opt-text focus:border-blue-500 outline-none"><button class="p-2 hover:bg-red-50 rounded"><i class="fas fa-times text-red-500"></i></button></div><div class="flex items-center gap-3 bg-white p-2 rounded border"><input type="radio" name="eq-correct-idx" value="1" class="w-5 h-5 cursor-pointer"><input type="text" class="flex-grow p-2 border rounded opt-text focus:border-blue-500 outline-none"><button class="p-2 hover:bg-red-50 rounded"><i class="fas fa-times text-red-500"></i></button></div><div class="flex items-center gap-3 bg-white p-2 rounded border"><input type="radio" name="eq-correct-idx" value="2" class="w-5 h-5 cursor-pointer"><input type="text" class="flex-grow p-2 border rounded opt-text focus:border-blue-500 outline-none"><button class="p-2 hover:bg-red-50 rounded"><i class="fas fa-times text-red-500"></i></button></div><div class="flex items-center gap-3 bg-white p-2 rounded border"><input type="radio" name="eq-correct-idx" value="3" class="w-5 h-5 cursor-pointer"><input type="text" class="flex-grow p-2 border rounded opt-text focus:border-blue-500 outline-none"><button class="p-2 hover:bg-red-50 rounded"><i class="fas fa-times text-red-500"></i></button></div></div>
+                        <button id="btn-add-option" type="button" onclick="addEditorOption()" class="mt-2 text-sm text-blue-600 font-bold hover:underline" style="display: block;">+ إضافة خيار</button>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t flex justify-end gap-3">
+                    <button onclick="closeQuestionEditor()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 font-bold">إلغاء</button>
+                    <button onclick="saveQuestion()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold">حفظ السؤال</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /** 
+         * IS_STUDENT_VERSION Flag
+         * When exported, this will be modified to true by the export script.
+         * If true, it hides admin buttons and skips loading from localStorage.
+         */
+        const IS_STUDENT_VERSION = true;
+        
+        // --- CONSTANTS & CONFIG ---
+        const BALLOON_COLORS = [
+            {bg: '#FF3B30', text: '#fff'}, {bg: '#FF9500', text: '#fff'}, {bg: '#FFCC00', text: '#000'},
+            {bg: '#4CD964', text: '#fff'}, {bg: '#5AC8FA', text: '#000'}, {bg: '#007AFF', text: '#fff'},
+            {bg: '#5856D6', text: '#fff'}, {bg: '#FF2D55', text: '#fff'}, {bg: '#E024CE', text: '#fff'}
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let appState = {
+            settings: {
+                schoolName: "مدرسة عبد الله بن زيد آل محمود النموذجية",
+                department: "قسم التربية الإسلامية",
+                mainTitle: "لعبة فرقع البالونات",
+                showHeader: true,
+                bgTheme: "bg-sky",
+                defaultPoints: 10,
+                timer: 15,
+                failAction: "next_turn", // or 'second_chance'
+                audioEnabled: true
+            },
+            questions: [
+                { id: 1, text: "ما هي أول سورة في القرآن الكريم؟", type: "mcq", points: 10, options: ["سورة البقرة", "سورة الفاتحة", "سورة الإخلاص", "سورة الناس"], correctIndex: 1 },
+                { id: 2, text: "كم عدد الصلوات المفروضة في اليوم والليلة؟", type: "mcq", points: 10, options: ["3 صلوات", "4 صلوات", "5 صلوات", "6 صلوات"], correctIndex: 2 },
+                { id: 3, text: "الصيام ركن من أركان الإسلام.", type: "tf", points: 10, options: ["صح", "خطأ"], correctIndex: 0 },
+                { id: 4, text: "من هو خاتم الأنبياء والمرسلين؟", type: "mcq", points: 15, options: ["موسى عليه السلام", "عيسى عليه السلام", "إبراهيم عليه السلام", "محمد صلى الله عليه وسلم"], correctIndex: 3 },
+                { id: 5, text: "الكذب صفة محمودة في الإسلام.", type: "tf", points: 10, options: ["صح", "خطأ"], correctIndex: 1 },
+                { id: 6, text: "ما هو الشهر الذي نصوم فيه؟", type: "mcq", points: 10, options: ["شعبان", "رمضان", "شوال", "محرم"], correctIndex: 1 }
+            ],
+            session: {
+                mode: 'solo', // 'solo' or 'team'
+                p1Name: 'بطل المستقبل', p2Name: 'الفريق الثاني',
+                p1Score: 0, p2Score: 0,
+                currentTurn: 1, // 1 for P1, 2 for P2
+                answeredQuestions: [], // IDs of answered questions
+                currentQuestionObj: null,
+                timerInterval: null,
+                isGameOver: false
+            }
+        };
+
+        // If a pre-baked state exists (in student version), it will be declared here by the export script.
+        appState = {"settings":{"schoolName":"مدرسة عبد الله بن زيد آل محمود النموذجية","department":"قسم التربية الإسلامية","mainTitle":"لعبة فرقع البالونات","showHeader":true,"bgTheme":"bg-sky","defaultPoints":10,"timer":15,"failAction":"next_turn","audioEnabled":true},"questions":[{"id":1,"text":"أوصانا الرسول صلى الله عليه وسلم بالحرص على الأعمال الصالحة:","type":"tf","points":10,"options":["صح","خطأ"],"correctIndex":0,"colorIndex":0},{"id":2,"text":"مما يسافاد من الحديث الشريف :","type":"mcq","points":10,"options":["الحرص على الأعمال الصالحة ومنها الصلاة على وقتها وبر الوالدين","أجر الحج الكبير","أجر الصوم الكبير","أجر الزكاة والصدقة الكبير"],"correctIndex":0,"colorIndex":3},{"id":3,"text":"يجب على المسلم المحافظة على ................ في وقتها.","type":"mcq","points":10,"options":["الزكاة","الصلاة","الصدقة","الحج"],"correctIndex":1,"colorIndex":2}],"session":{"mode":"solo","p1Name":"بطل المستقبل","p2Name":"الفريق الثاني","p1Score":0,"p2Score":0,"currentTurn":1,"answeredQuestions":[2,4],"currentQuestionObj":{"id":4,"text":"من هو خاتم الأنبياء والمرسلين؟","type":"mcq","points":15,"options":["موسى عليه السلام","عيسى عليه السلام","إبراهيم عليه السلام","محمد صلى الله عليه وسلم"],"correctIndex":3},"timerInterval":37,"isGameOver":false}};
+// INJECT_STUDENT_STATE_HERE
+
+        // --- INITIALIZATION ---
+        function initApp() {
+            if (IS_STUDENT_VERSION) {
+                // In student version, hide admin button
+                const adminBtn = document.getElementById('btn-dashboard-access');
+                if(adminBtn) adminBtn.style.display = 'none';
+                
+                // If student version, appState is already populated by injection.
+            } else {
+                // Teacher version: load from localStorage if exists
+                const savedState = localStorage.getItem('balloonGameData');
+                if (savedState) {
+                    const parsed = JSON.parse(savedState);
+                    appState.settings = { ...appState.settings, ...parsed.settings };
+                    appState.questions = parsed.questions || appState.questions;
+                }
+            }
+
+            // Always clear session data on load (Rule 21)
+            resetSession();
+            applySettingsToUI();
+            
+            // Show splash
+            showScreen('screen-splash');
+            
+            // Pre-init Audio Context slightly to unlock it (requires user interaction later though)
+            initAudioContext();
+        }
+
+        function resetSession() {
+            appState.session = {
+                mode: 'solo',
+                p1Name: 'بطل المستقبل', p2Name: 'الفريق الثاني',
+                p1Score: 0, p2Score: 0,
+                currentTurn: 1,
+                answeredQuestions: [],
+                currentQuestionObj: null,
+                timerInterval: null,
+                isGameOver: false
+            };
+        }
+
+        function applySettingsToUI() {
+            // Header text
+            document.getElementById('header-school-name').textContent = appState.settings.schoolName;
+            document.getElementById('header-department').textContent = appState.settings.department;
+            document.getElementById('game-main-title').textContent = appState.settings.mainTitle;
+            
+            // Header visibility
+            document.getElementById('main-header').style.display = appState.settings.showHeader ? 'flex' : 'none';
+            
+            // Background Theme
+            document.body.className = `min-h-screen flex flex-col relative transition-colors duration-500 ${appState.settings.bgTheme}`;
+            
+            // Dashboard inputs update
+            if (!IS_STUDENT_VERSION) {
+                document.getElementById('set-school').value = appState.settings.schoolName;
+                document.getElementById('set-dept').value = appState.settings.department;
+                document.getElementById('set-title').value = appState.settings.mainTitle;
+                document.getElementById('set-header').value = appState.settings.showHeader.toString();
+                document.getElementById('set-points').value = appState.settings.defaultPoints;
+                document.getElementById('set-timer').value = appState.settings.timer;
+                document.getElementById('set-fail-action').value = appState.settings.failAction;
+                renderQuestionsTable();
+            }
+
+            // Audio Icon
+            updateAudioIcon();
+        }
+
+        function updateSetting(key, value) {
+            appState.settings[key] = value;
+            saveDataLocally();
+            applySettingsToUI();
+        }
+
+        function saveDataLocally() {
+            if (IS_STUDENT_VERSION) return;
+            // Only save settings and questions, not session
+            const dataToSave = {
+                settings: appState.settings,
+                questions: appState.questions
+            };
+            localStorage.setItem('balloonGameData', JSON.stringify(dataToSave));
+        }
+
+        // --- SCREEN MANAGEMENT ---
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(el => {
+                el.classList.remove('active');
+                if (el.id !== 'screen-dashboard' && el.id !== 'modal-question' && el.id !== 'modal-edit-question') {
+                    // Hide generic screens properly based on structure
+                    // Using inline styles for hidden ones might conflict with flex, so rely on class toggle.
+                }
+            });
+            const target = document.getElementById(screenId);
+            if(target) {
+                if(screenId === 'screen-dashboard' || screenId === 'modal-question' || screenId === 'modal-edit-question' || screenId === 'screen-result') {
+                     target.style.display = 'flex';
+                     setTimeout(() => target.classList.add('active'), 10);
+                } else {
+                     target.classList.add('active');
+                }
+            }
+        }
+
+        function hideScreen(screenId) {
+            const target = document.getElementById(screenId);
+            if(target) {
+                target.classList.remove('active');
+                setTimeout(() => target.style.display = 'none', 300); // match animation duration
+            }
+        }
+
+        function setupGame(mode) {
+            appState.session.mode = mode;
+            document.getElementById('solo-name-input').classList.toggle('hidden', mode !== 'solo');
+            document.getElementById('team-names-input').classList.toggle('hidden', mode !== 'team');
+            document.getElementById('names-title').textContent = mode === 'solo' ? 'اسم اللاعب' : 'أسماء الفرق';
+            showScreen('screen-names');
+        }
+
+        function startGame() {
+            // Unlock audio context on user gesture
+            if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+            // Set names
+            if (appState.session.mode === 'solo') {
+                appState.session.p1Name = document.getElementById('player-name').value || 'بطل المستقبل';
+            } else {
+                appState.session.p1Name = document.getElementById('team1-name').value || 'الفريق الأزرق';
+                appState.session.p2Name = document.getElementById('team2-name').value || 'الفريق الأحمر';
+            }
+
+            // Setup UI
+            document.getElementById('display-name-1').textContent = appState.session.p1Name;
+            document.getElementById('display-score-1').textContent = '0';
+            
+            if (appState.session.mode === 'team') {
+                document.getElementById('score-box-2').classList.remove('hidden');
+                document.getElementById('display-name-2').textContent = appState.session.p2Name;
+                document.getElementById('display-score-2').textContent = '0';
+                document.getElementById('turn-indicator').classList.remove('hidden');
+                updateTurnIndicator();
+            } else {
+                document.getElementById('score-box-2').classList.add('hidden');
+                document.getElementById('turn-indicator').classList.add('hidden');
+            }
+
+            appState.session.answeredQuestions = [];
+            generateBalloons();
+            showScreen('screen-game');
+            playSound('start');
+        }
+
+        function updateTurnIndicator() {
+            if(appState.session.mode !== 'team') return;
+            const turnEl = document.getElementById('turn-indicator');
+            const name = appState.session.currentTurn === 1 ? appState.session.p1Name : appState.session.p2Name;
+            const colorClass = appState.session.currentTurn === 1 ? 'text-blue-600' : 'text-red-600';
+            turnEl.innerHTML = `دور: <span class="${colorClass}">${name}</span>`;
+            
+            // Highlight active score box
+            document.getElementById('score-box-1').style.transform = appState.session.currentTurn === 1 ? 'scale(1.1)' : 'scale(1)';
+            document.getElementById('score-box-1').style.opacity = appState.session.currentTurn === 1 ? '1' : '0.7';
+            document.getElementById('score-box-2').style.transform = appState.session.currentTurn === 2 ? 'scale(1.1)' : 'scale(1)';
+            document.getElementById('score-box-2').style.opacity = appState.session.currentTurn === 2 ? '1' : '0.7';
+        }
+
+        // --- BALLOON ENGINE ---
+        function generateBalloons() {
+            const area = document.getElementById('balloons-area');
+            area.innerHTML = '';
+            
+            // Shuffle questions and select up to a reasonable amount, or all of them.
+            // For this version, we map 1 balloon = 1 question.
+            let availableQuestions = appState.questions.filter(q => !appState.session.answeredQuestions.includes(q.id));
+            
+            if(availableQuestions.length === 0) {
+                // Game over logically, shouldn't happen here but safe check
+                finishGame();
+                return;
+            }
+
+            availableQuestions.forEach((q, index) => {
+                let colorObj;
+                if (q.colorIndex !== undefined && q.colorIndex >= 0 && q.colorIndex < BALLOON_COLORS.length) {
+                    colorObj = BALLOON_COLORS[q.colorIndex];
+                } else {
+                    colorObj = BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)];
+                }
+                
+                const delay = Math.random() * 2; // Random animation delay
+                
+                const bContainer = document.createElement('div');
+                bContainer.className = 'balloon-container';
+                bContainer.style.animationDelay = `${delay}s`;
+                bContainer.onclick = () => handleBalloonClick(bContainer, q);
+
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.backgroundColor = colorObj.bg;
+                balloon.style.color = colorObj.bg; // For the knot
+                
+                const num = document.createElement('span');
+                num.className = 'balloon-number';
+                num.style.color = colorObj.text;
+                // Add a star icon if it's a high point question (relative to default)
+                if(q.points > appState.settings.defaultPoints) {
+                     num.innerHTML = `<i class="fas fa-star text-yellow-300 text-3xl"></i>`;
+                } else {
+                     num.textContent = index + 1; // Visual number, not ID
+                }
+
+                balloon.appendChild(num);
+                bContainer.appendChild(balloon);
+                area.appendChild(bContainer);
+            });
+        }
+
+        function handleBalloonClick(element, question) {
+            const balloon = element.querySelector('.balloon');
+            
+            // Pop effect
+            balloon.classList.add('popping');
+            playSound('pop');
+            createParticles(element.getBoundingClientRect());
+
+            // Remove from DOM slightly after animation
+            setTimeout(() => {
+                element.style.visibility = 'hidden'; // Keep layout space but hide
+                element.onclick = null; // disable
+            }, 200);
+
+            // Setup Question Modal
+            setTimeout(() => {
+                showQuestion(question);
+            }, 500);
+        }
+
+        // --- QUESTION & GAMEPLAY LOGIC ---
+        function showQuestion(questionObj) {
+            appState.session.currentQuestionObj = questionObj;
+            
+            document.getElementById('q-number-display').textContent = appState.session.answeredQuestions.length + 1;
+            document.getElementById('q-points-display').innerHTML = `<i class="fas fa-star text-yellow-400"></i> ${questionObj.points} نقطة`;
+            document.getElementById('q-text').textContent = questionObj.text;
+            
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = '';
+            
+            // Generate option buttons
+            questionObj.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full py-6 px-4 text-2xl font-bold bg-gray-50 border-4 border-gray-200 rounded-2xl hover:bg-blue-50 hover:border-blue-400 transition-all btn-3d shadow-md';
+                btn.textContent = opt;
+                btn.onclick = () => handleAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('question-card').classList.remove('shake-err');
+            document.getElementById('modal-question').classList.remove('hidden');
+            
+            startTimer();
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            clearInterval(appState.session.timerInterval);
+            const q = appState.session.currentQuestionObj;
+            const isCorrect = selectedIndex === q.correctIndex;
+            
+            // Disable all buttons
+            const btns = document.getElementById('q-options').querySelectorAll('button');
+            btns.forEach(b => b.onclick = null);
+
+            if (isCorrect) {
+                // Correct
+                btnElement.classList.replace('bg-gray-50', 'bg-green-500');
+                btnElement.classList.replace('border-gray-200', 'border-green-600');
+                btnElement.classList.add('text-white');
+                playSound('correct');
+                triggerConfetti();
+                addPoints(q.points);
+                
+                setTimeout(() => {
+                    closeQuestionAndNext();
+                }, 2000);
+
+            } else {
+                // Wrong
+                btnElement.classList.replace('bg-gray-50', 'bg-red-500');
+                btnElement.classList.replace('border-gray-200', 'border-red-600');
+                btnElement.classList.add('text-white');
+                playSound('wrong');
+                document.getElementById('question-card').classList.add('shake-err');
+                
+                // Highlight correct answer
+                btns[q.correctIndex].classList.replace('bg-gray-50', 'bg-green-100');
+                btns[q.correctIndex].classList.replace('border-gray-200', 'border-green-400');
+
+                setTimeout(() => {
+                    document.getElementById('question-card').classList.remove('shake-err');
+                    if (appState.session.mode === 'team' && appState.settings.failAction === 'next_turn') {
+                        // Switch turn without points
+                        closeQuestionAndNext(false); 
+                    } else {
+                        // Solo or second_chance team mode: just move on
+                        closeQuestionAndNext(false);
+                    }
+                }, 2500);
+            }
+        }
+
+        function addPoints(points) {
+            const isP1 = appState.session.currentTurn === 1;
+            if (isP1) {
+                appState.session.p1Score += points;
+                animateScoreUpdate('display-score-1', appState.session.p1Score);
+            } else {
+                appState.session.p2Score += points;
+                animateScoreUpdate('display-score-2', appState.session.p2Score);
+            }
+        }
+
+        function animateScoreUpdate(elementId, newScore) {
+            const el = document.getElementById(elementId);
+            el.textContent = newScore;
+            el.style.transform = 'scale(1.5)';
+            el.style.color = '#F59E0B'; // yellow warning temporary
+            setTimeout(() => {
+                el.style.transform = 'scale(1)';
+                el.style.color = ''; // reset to class color
+            }, 300);
+        }
+
+        function closeQuestionAndNext(wasCorrect = true) {
+            document.getElementById('modal-question').classList.add('hidden');
+            
+            // Mark question as answered
+            if(appState.session.currentQuestionObj) {
+                appState.session.answeredQuestions.push(appState.session.currentQuestionObj.id);
+            }
+
+            // Switch turn if in team mode
+            if (appState.session.mode === 'team') {
+                appState.session.currentTurn = appState.session.currentTurn === 1 ? 2 : 1;
+                updateTurnIndicator();
+            }
+
+            checkGameEnd();
+        }
+
+        function checkGameEnd() {
+            if (appState.session.answeredQuestions.length >= appState.questions.length) {
+                finishGame();
+            } else {
+                // Re-render balloons to remove the blank space if desired, or keep spaces.
+                // Keeping spaces is fine, but if we want to repack:
+                // generateBalloons(); // Doing this resets animations, might look jumpy. Let's rely on visibility:hidden.
+            }
+        }
+
+        function startTimer() {
+            const timerVal = appState.settings.timer;
+            const timerContainer = document.getElementById('timer-container');
+            const timerText = document.getElementById('timer-text');
+            const timerCircle = document.getElementById('timer-circle');
+            
+            clearInterval(appState.session.timerInterval);
+
+            if (timerVal <= 0) {
+                timerContainer.classList.add('hidden');
+                return;
+            }
+
+            timerContainer.classList.remove('hidden');
+            let timeLeft = timerVal;
+            const fullDash = 251; // Circumference of r=40
+            
+            timerText.textContent = timeLeft;
+            timerCircle.style.strokeDashoffset = '0';
+            timerCircle.style.stroke = '#3B82F6'; // Blue
+
+            appState.session.timerInterval = setInterval(() => {
+                timeLeft--;
+                timerText.textContent = timeLeft;
+                
+                // Calculate offset (1 - (left/total)) * fullDash
+                const offset = fullDash - ((timeLeft / timerVal) * fullDash);
+                timerCircle.style.strokeDashoffset = offset;
+
+                if (timeLeft <= 5) {
+                    timerCircle.style.stroke = '#EF4444'; // Red
+                    playSound('tick');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(appState.session.timerInterval);
+                    playSound('wrong');
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function handleTimeOut() {
+            const btns = document.getElementById('q-options').querySelectorAll('button');
+            btns.forEach(b => b.onclick = null); // disable
+            
+            document.getElementById('q-text').textContent = "انتهى الوقت!";
+            document.getElementById('question-card').classList.add('shake-err');
+
+            setTimeout(() => {
+                closeQuestionAndNext(false);
+            }, 2000);
+        }
+
+        function finishGame() {
+            appState.session.isGameOver = true;
+            hideScreen('screen-game');
+            showScreen('screen-result');
+            playSound('win');
+            triggerConfetti(true); // lots of confetti
+
+            const titleEl = document.getElementById('winner-text');
+            const subEl = document.getElementById('winner-subtext');
+
+            if (appState.session.mode === 'solo') {
+                titleEl.textContent = "أداء رائع يا بطل!";
+                subEl.textContent = `النقاط: ${appState.session.p1Score}`;
+            } else {
+                if (appState.session.p1Score > appState.session.p2Score) {
+                    titleEl.innerHTML = `🏆 فاز <span class="text-blue-600">${appState.session.p1Name}</span>!`;
+                } else if (appState.session.p2Score > appState.session.p1Score) {
+                    titleEl.innerHTML = `🏆 فاز <span class="text-red-600">${appState.session.p2Name}</span>!`;
+                } else {
+                    titleEl.textContent = "🤝 تعادل رائع!";
+                }
+                subEl.innerHTML = `${appState.session.p1Name}: ${appState.session.p1Score} | ${appState.session.p2Name}: ${appState.session.p2Score}`;
+            }
+        }
+
+        function endGameEarly() {
+            if(confirm("هل أنت متأكد من إنهاء اللعبة الآن؟")) {
+                finishGame();
+            }
+        }
+
+        function resetToSplash() {
+            hideScreen('screen-result');
+            initApp();
+        }
+
+        // --- AUDIO SYSTEM ---
+        let audioCtx;
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function toggleAudio() {
+            appState.settings.audioEnabled = !appState.settings.audioEnabled;
+            updateAudioIcon();
+        }
+        
+        function updateAudioIcon() {
+            const icon = document.getElementById('audio-icon');
+            if(appState.settings.audioEnabled) {
+                icon.className = 'fas fa-volume-up';
+                icon.parentElement.classList.remove('text-red-500');
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                icon.parentElement.classList.add('text-red-500');
+            }
+        }
+
+        function playSound(type) {
+            if (!appState.settings.audioEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            switch(type) {
+                case 'pop':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                    gainNode.gain.setValueAtTime(1, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                    break;
+                case 'correct':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.setValueAtTime(600, now + 0.1);
+                    osc.frequency.setValueAtTime(800, now + 0.2);
+                    gainNode.gain.setValueAtTime(0, now);
+                    gainNode.gain.linearRampToValueAtTime(0.5, now + 0.1);
+                    gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                    break;
+                case 'wrong':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                    gainNode.gain.setValueAtTime(0.5, now);
+                    gainNode.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                    break;
+                case 'tick':
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(1000, now);
+                    gainNode.gain.setValueAtTime(0.1, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                    break;
+                case 'start':
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.linearRampToValueAtTime(600, now + 0.2);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                    break;
+                case 'win':
+                    // Simple chord-like arpeggio
+                    [440, 554.37, 659.25, 880].forEach((freq, i) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.value = freq;
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        g.gain.setValueAtTime(0, now + (i*0.15));
+                        g.gain.linearRampToValueAtTime(0.3, now + (i*0.15) + 0.05);
+                        g.gain.linearRampToValueAtTime(0, now + 1.5);
+                        o.start(now + (i*0.15));
+                        o.stop(now + 2);
+                    });
+                    break;
+            }
+        }
+
+        // --- VISUAL EFFECTS ---
+        function createParticles(rect) {
+            const colors = ['#facc15', '#f87171', '#60a5fa', '#34d399'];
+            for(let i=0; i<15; i++) {
+                const p = document.createElement('div');
+                p.style.position = 'absolute';
+                p.style.left = (rect.left + rect.width/2) + 'px';
+                p.style.top = (rect.top + rect.height/2) + 'px';
+                p.style.width = '10px';
+                p.style.height = '10px';
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.borderRadius = '50%';
+                p.style.pointerEvents = 'none';
+                p.style.zIndex = '100';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 50 + Math.random() * 50;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity - 50; // slight upward bias
+
+                p.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], { duration: 600, easing: 'cubic-bezier(0, .9, .57, 1)' });
+
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 600);
+            }
+        }
+
+        // Fallback Confetti using DOM if external canvas-confetti is not loaded, but let's implement a simple DOM one for self-containment
+        function triggerConfetti(massive = false) {
+            const count = massive ? 100 : 30;
+            const colors = ['#facc15', '#f87171', '#60a5fa', '#34d399', '#a78bfa'];
+            
+            for(let i=0; i<count; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.width = (Math.random() * 10 + 5) + 'px';
+                conf.style.height = (Math.random() * 20 + 10) + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.zIndex = '9999';
+                conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(conf);
+
+                const duration = Math.random() * 2000 + 2000;
+                conf.animate([
+                    { transform: `translate3d(0,0,0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate3d(${Math.random()*200 - 100}px, 100vh, 0) rotate(${Math.random()*720}deg)`, opacity: 0 }
+                ], { duration: duration, easing: 'linear' });
+
+                setTimeout(() => conf.remove(), duration);
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+        
+        // Handle logo upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('ministry-logo').src = e.target.result;
+                    // In a real app we'd save this to localStorage, but base64 strings get too big.
+                    // For MVP, we let it reset on reload or keep it session based.
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- TEACHER DASHBOARD LOGIC ---
+        function switchDashTab(tabId) {
+            document.querySelectorAll('.dash-tab').forEach(t => { t.classList.remove('block'); t.classList.add('hidden'); });
+            document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active', 'bg-slate-700'));
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+            event.currentTarget.classList.add('active', 'bg-slate-700');
+        }
+
+        function renderQuestionsTable() {
+            const tbody = document.getElementById('questions-table-body');
+            tbody.innerHTML = '';
+            
+            if(appState.questions.length === 0) {
+                document.getElementById('no-questions-msg').classList.remove('hidden');
+            } else {
+                document.getElementById('no-questions-msg').classList.add('hidden');
+                
+                appState.questions.forEach((q, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b hover:bg-gray-50';
+                    tr.innerHTML = `
+                        <td class="p-4">${index + 1}</td>
+                        <td class="p-4 font-bold text-gray-800">${q.text}</td>
+                        <td class="p-4 text-sm text-gray-500">${q.type === 'mcq' ? 'خيارات' : 'صح/خطأ'}</td>
+                        <td class="p-4 text-blue-600 font-bold">${q.points}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="editQuestion(${q.id})" class="text-blue-500 hover:text-blue-700 mx-2" title="تعديل"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteQuestion(${q.id})" class="text-red-500 hover:text-red-700 mx-2" title="حذف"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function deleteQuestion(id) {
+            if(confirm('هل أنت متأكد من حذف هذا السؤال؟')) {
+                appState.questions = appState.questions.filter(q => q.id !== id);
+                saveDataLocally();
+                renderQuestionsTable();
+            }
+        }
+
+        // --- QUESTION EDITOR ---
+        let editorOptionCount = 0;
+        let editorSelectedColorIndex = -1;
+        
+        function openQuestionModal(qId = null) {
+            const modal = document.getElementById('modal-edit-question');
+            const title = document.getElementById('edit-q-title');
+            
+            if (qId) {
+                title.textContent = "تعديل السؤال";
+                const q = appState.questions.find(x => x.id === qId);
+                document.getElementById('eq-id').value = q.id;
+                document.getElementById('eq-text').value = q.text;
+                document.getElementById('eq-type').value = q.type;
+                document.getElementById('eq-points').value = q.points;
+                
+                editorSelectedColorIndex = q.colorIndex !== undefined ? q.colorIndex : -1;
+                
+                renderEditorOptions(q.options, q.correctIndex, q.type);
+            } else {
+                title.textContent = "إضافة سؤال جديد";
+                document.getElementById('eq-id').value = '';
+                document.getElementById('eq-text').value = '';
+                document.getElementById('eq-type').value = 'mcq';
+                document.getElementById('eq-points').value = appState.settings.defaultPoints;
+                
+                editorSelectedColorIndex = -1;
+                
+                renderEditorOptions(['الخيار الأول', 'الخيار الثاني'], 0, 'mcq');
+            }
+            
+            renderColorPickerUI();
+            modal.style.display = 'flex';
+        }
+
+        function closeQuestionEditor() {
+            document.getElementById('modal-edit-question').style.display = 'none';
+        }
+
+        function toggleQuestionOptionsUI() {
+            const type = document.getElementById('eq-type').value;
+            if(type === 'tf') {
+                renderEditorOptions(['صح', 'خطأ'], 0, 'tf');
+                document.getElementById('btn-add-option').style.display = 'none';
+            } else {
+                renderEditorOptions(['خيار 1', 'خيار 2', 'خيار 3'], 0, 'mcq');
+                document.getElementById('btn-add-option').style.display = 'block';
+            }
+        }
+
+        function renderColorPickerUI() {
+            const container = document.getElementById('eq-color-picker');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            // خيار العشوائي
+            const btnRandom = document.createElement('button');
+            btnRandom.className = `w-10 h-10 rounded-full border-2 flex items-center justify-center text-xs font-bold ${editorSelectedColorIndex === -1 ? 'border-gray-800 shadow-lg ring-2 ring-gray-400 scale-110' : 'border-gray-300 shadow bg-gray-100 text-gray-500'}`;
+            btnRandom.textContent = '?';
+            btnRandom.title = 'عشوائي';
+            btnRandom.type = 'button';
+            btnRandom.onclick = () => { editorSelectedColorIndex = -1; renderColorPickerUI(); };
+            container.appendChild(btnRandom);
+            
+            // الألوان المحددة
+            BALLOON_COLORS.forEach((color, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-10 h-10 rounded-full border-2 shadow transition-transform ${editorSelectedColorIndex === idx ? 'border-gray-800 ring-2 ring-gray-400 scale-110' : 'border-transparent hover:scale-105'}`;
+                btn.style.backgroundColor = color.bg;
+                btn.type = 'button';
+                btn.onclick = () => { editorSelectedColorIndex = idx; renderColorPickerUI(); };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderEditorOptions(options, correctIndex, type) {
+            const list = document.getElementById('eq-options-list');
+            list.innerHTML = '';
+            editorOptionCount = 0;
+            
+            options.forEach((opt, idx) => {
+                addEditorOption(opt, idx === correctIndex, type === 'tf');
+            });
+        }
+
+        function addEditorOption(text = '', isCorrect = false, isTF = false) {
+            const list = document.getElementById('eq-options-list');
+            const idx = editorOptionCount++;
+            
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-3 bg-white p-2 rounded border';
+            
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'eq-correct-idx';
+            radio.value = idx;
+            radio.className = 'w-5 h-5 cursor-pointer';
+            if (isCorrect) radio.checked = true;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'flex-grow p-2 border rounded opt-text focus:border-blue-500 outline-none';
+            input.value = text;
+            if(isTF) input.readOnly = true; // Lock text for True/False
+
+            const btnDel = document.createElement('button');
+            btnDel.innerHTML = '<i class="fas fa-times text-red-500"></i>';
+            btnDel.className = 'p-2 hover:bg-red-50 rounded';
+            btnDel.onclick = () => { if(editorOptionCount > 2) { div.remove(); } else { alert('يجب أن يحتوي السؤال على خيارين على الأقل');} };
+            if(isTF) btnDel.style.display = 'none';
+
+            div.appendChild(radio);
+            div.appendChild(input);
+            div.appendChild(btnDel);
+            list.appendChild(div);
+        }
+
+        function saveQuestion() {
+            const idVal = document.getElementById('eq-id').value;
+            const text = document.getElementById('eq-text').value.trim();
+            const type = document.getElementById('eq-type').value;
+            const points = parseInt(document.getElementById('eq-points').value) || 10;
+            
+            if(!text) { alert('الرجاء إدخال نص السؤال'); return; }
+
+            const optDivs = document.getElementById('eq-options-list').children;
+            let options = [];
+            let correctIndex = 0;
+            let checkedFound = false;
+
+            for(let i=0; i<optDivs.length; i++) {
+                const val = optDivs[i].querySelector('.opt-text').value.trim();
+                const isChecked = optDivs[i].querySelector('input[type="radio"]').checked;
+                
+                if(!val) { alert('الرجاء تعبئة جميع الخيارات أو حذف الخيارات الفارغة'); return; }
+                options.push(val);
+                if(isChecked) { correctIndex = i; checkedFound = true; }
+            }
+
+            if(!checkedFound) { alert('الرجاء تحديد الإجابة الصحيحة'); return; }
+
+            const newQ = {
+                id: idVal ? parseInt(idVal) : Date.now(),
+                text, type, points, options, correctIndex,
+                colorIndex: editorSelectedColorIndex
+            };
+
+            if(idVal) {
+                const idx = appState.questions.findIndex(q => q.id === parseInt(idVal));
+                if(idx > -1) appState.questions[idx] = newQ;
+            } else {
+                appState.questions.push(newQ);
+            }
+
+            saveDataLocally();
+            renderQuestionsTable();
+            closeQuestionEditor();
+        }
+
+        function editQuestion(id) {
+            openQuestionModal(id);
+        }
+
+        // --- DATA MANAGEMENT ---
+        function exportDataJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({settings: appState.settings, questions: appState.questions}));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href",     dataStr     );
+            dlAnchorElem.setAttribute("download", "balloon_game_backup.json");
+            dlAnchorElem.click();
+        }
+
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.settings && parsed.questions) {
+                        appState.settings = parsed.settings;
+                        appState.questions = parsed.questions;
+                        saveDataLocally();
+                        applySettingsToUI();
+                        alert('تم استيراد البيانات بنجاح!');
+                    } else {
+                        alert('ملف غير صالح');
+                    }
+                } catch(err) {
+                    alert('خطأ في قراءة الملف');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function factoryReset() {
+            if(confirm('تحذير: سيتم مسح جميع الأسئلة والإعدادات! هل أنت متأكد؟')) {
+                localStorage.removeItem('balloonGameData');
+                location.reload();
+            }
+        }
+
+        /**
+         * EXPORT STUDENT VERSION
+         * This function reads the current HTML, modifies the JS to hardcode
+         * the current appState, changes the IS_STUDENT_VERSION flag,
+         * removes the dashboard HTML, and triggers a download.
+         */
+        function exportStudentVersion() {
+            alert("جاري تجهيز النسخة... سيتم تحميل الملف بعد قليل. \nيمكنك إرسال هذا الملف للطلاب للعب مباشرة بدون لوحة التحكم.");
+            
+            // 1. Get entire HTML
+            let htmlContent = document.documentElement.outerHTML;
+
+            // 2. Remove Teacher Dashboard element to keep file clean
+            // We use Regex to remove the block between <!-- Teacher Dashboard --> and the end of its div.
+            // A safer DOM way:
+            const tempDoc = new DOMParser().parseFromString(htmlContent, 'text/html');
+            const dashEl = tempDoc.getElementById('screen-dashboard');
+            if(dashEl) dashEl.remove();
+            
+            const btnAccess = tempDoc.getElementById('btn-dashboard-access');
+            if(btnAccess) btnAccess.remove();
+            
+            // Re-serialize
+            htmlContent = "<!DOCTYPE html>\n" + tempDoc.documentElement.outerHTML;
+
+            // 3. Inject State and modify flag
+            // Find the constant and modify it
+            htmlContent = htmlContent.replace(
+                'const IS_STUDENT_VERSION = false;', 
+                'const IS_STUDENT_VERSION = true;'
+            );
+
+            // Clean the state to not include session data, only questions/settings
+            const stateToInject = {
+                settings: appState.settings,
+                questions: appState.questions,
+                session: { ...appState.session } // Will be reset on init anyway
+            };
+
+            const injectionString = `appState = ${JSON.stringify(stateToInject)};\n// INJECT_STUDENT_STATE_HERE`;
+            
+            htmlContent = htmlContent.replace('// INJECT_STUDENT_STATE_HERE', injectionString);
+
+            // 4. Trigger Download
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `لعبة_البالونات_نسخة_الطلاب.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Boot up
+        window.onload = initApp;
+
+    </script>
+
+</body></html>
