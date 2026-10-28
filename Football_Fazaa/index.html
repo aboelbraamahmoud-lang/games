@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8a1538">
+<title>كرة القدم التعليمية | إصدار مستقل دون إنترنت</title>
+<link rel="stylesheet" href="style.css?v=22.4">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="football-icon" aria-hidden="true">⚽</div><div><strong id="appName">كرة القدم التعليمية</strong><small id="schoolName">اسم المدرسة</small></div></div>
+  <div class="toptools"><span class="status">● تعمل دون إنترنت</span><button id="btnHome" class="ghost" hidden>لوحة المعلمة</button><button id="btnFullscreen" class="ghost" title="ملء الشاشة">⛶ ملء الشاشة</button></div>
+</header>
+<main>
+<section id="editor" class="view" hidden>
+  <div class="intro"><div><span class="eyebrow">إصدار المعلمة · تحكم كامل</span><h1>إعداد مسابقة كرة القدم</h1><p>أضيفي الأسئلة وحدّدي الإجابة الصحيحة، ثم جرّبي اللعبة أو صدّري نسختين مستقلتين للعمل دون اتصال.</p></div><div class="stat" id="countDisplay">0 أسئلة</div></div>
+  <div class="settings-card"><div class="fields">
+    <label>اسم اللعبة <input id="gameTitle" maxlength="100" placeholder="كرة القدم التعليمية" autocomplete="off"></label>
+    <label>اسم المدرسة <input id="schoolTitle" maxlength="120" placeholder="اسم المدرسة" autocomplete="off"></label>
+    <label>اسم المعلمة <input id="teacherName" maxlength="120" placeholder="اسم المعلمة" autocomplete="off"></label>
+    <label>الصف / الشعبة <input id="className" maxlength="80" placeholder="مثال: الرابع أ" autocomplete="off"></label>
+    <label>مدة السؤال <select id="quizTime"><option value="0">بلا حد زمني</option><option value="15">15 ثانية</option><option value="20">20 ثانية</option><option value="30">30 ثانية</option><option value="45">45 ثانية</option><option value="60">60 ثانية</option></select></label>
+    <label class="check"><input type="checkbox" id="shuffleQuestions"> ترتيب عشوائي للأسئلة عند اللعب</label>
+  </div></div>
+  <div class="editorbar"><h2>بنك الأسئلة <small id="totalQuestions"></small></h2><div class="actions"><button id="addQuestion" class="maroon">＋ إضافة سؤال</button><button id="importQuestions" class="ghost">استيراد أسئلة JSON</button><button id="saveQuestions" class="ghost">حفظ ملف الأسئلة</button></div></div>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+  <div id="questionsEditor" class="question-editor"></div>
+  <div class="bottom-actions"><button id="tryGame" class="maroon">▶ تجربة اللعبة الآن</button><button id="exportTeacher" class="gold">⬇ تصدير نسخة المعلمة ZIP</button><button id="exportStudent" class="gold">⬇ تصدير نسخة الطلاب ZIP</button></div>
+  <p id="exportProgress" class="help" role="status" aria-live="polite">تُحفظ التعديلات تلقائيًّا على هذا الجهاز. نسختا التصدير تعملان بلا منصة ولا قاعدة بيانات ولا إنترنت.</p>
+</section>
+<section id="studentStart" class="view" hidden><div class="start-card"><div class="bigball">⚽</div><span class="eyebrow">تحدي كرة القدم التعليمي</span><h1 id="welcomeGameTitle">كرة القدم التعليمية</h1><p id="welcomeSchool">اسم المدرسة</p><label>اسم اللاعب / المجموعة (اختياري)<input id="playerName" placeholder="اكتب اسمك هنا" maxlength="70"></label><button class="maroon wide" id="beginStudent">ابدأ اللعب</button><small>تعمل اللعبة دون اتصال بالإنترنت. اختر طريقة اللعب داخل الملعب.</small></div></section>
+<section id="playView" class="view" hidden><div class="gameframe"><iframe id="gameFrame" title="ملعب كرة القدم التعليمي" allow="fullscreen" allowfullscreen></iframe>
+  <div id="questionOverlay" class="overlay" hidden><div class="questioncard"><div class="questionhead"><span>سؤال <b id="questionIndex">1</b> من <b id="questionTotal">3</b></span><span class="timer" id="timer" hidden>30</span></div><h2 id="questionPrompt"></h2><div id="answerOptions" class="answers"></div><p id="questionInstruction">اختر الإجابة الصحيحة لإكمال الهجمة.</p></div></div>
+  <div id="resultsOverlay" class="overlay" hidden><div class="resultcard"><span class="trophy">🏆</span><h1>صافرة النهاية!</h1><p id="resultStudent"></p><div id="resultStats" class="result-stats"></div><div class="actions center"><button class="maroon" id="restartGame">↻ العب مرة أخرى</button><button class="ghost" id="downloadResult">⬇ تحميل النتيجة</button><button class="ghost" id="backResult" hidden>العودة للأسئلة</button></div></div></div>
+  </div></section>
+</main>
+<footer class="footnote" id="footerLabel">لعبة تعليمية مستقلة · اسم المدرسة · WebGL ثلاثي الأبعاد · لا تحتاج اتصالًا بالإنترنت</footer>
+<script src="config.js?v=22.4"></script>
+<script src="assets-manifest.js"></script>
+<script src="zip.js"></script>
+<script src="app.js?v=22.4"></script>
+</body></html>
