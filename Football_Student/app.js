@@ -1,4 +1,4 @@
-/* Abu Ubaida independent offline educational football controller.
+/* Independent offline educational football controller.
  * No Supabase, no external navigation, no analytics, no CDN.
  * Parent owns the assessment; existing V22.1 stadium in runtime/ remains independent.
  */
@@ -9,7 +9,7 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 const key='abu-ubaida-offline-football-'+(CFG.packageId||'source');
 function normalize(o){
  let q=Array.isArray(o?.questions)?o.questions:[];
- return {role:isTeacher?'teacher':'student',title:String(o?.title||'كرة القدم التعليمية'),school:String(o?.school||'اسم المدرسة'),duration:[0,15,20,30,45,60].includes(Number(o?.duration))?Number(o.duration):30,shuffle:!!o?.shuffle,questions:q.slice(0,100).map(a=>({text:String(a?.text||''),options:Array.from({length:4},(_,i)=>String(a?.options?.[i]||'')),correct:Math.max(0,Math.min(3,Number(a?.correct)||0))}))};
+ return {role:isTeacher?'teacher':'student',title:String(o?.title||'كرة القدم التعليمية'),school:String(o?.school||'اسم المدرسة'),teacher:String(o?.teacher||'اسم المعلمة'),classroom:String(o?.classroom||'الصف'),duration:[0,15,20,30,45,60].includes(Number(o?.duration))?Number(o.duration):30,shuffle:!!o?.shuffle,questions:q.slice(0,100).map(a=>({text:String(a?.text||''),options:Array.from({length:4},(_,i)=>String(a?.options?.[i]||'')),correct:Math.max(0,Math.min(3,Number(a?.correct)||0))}))};
 }
 let config=normalize(CFG);
 if(isTeacher){try{const saved=localStorage.getItem(key);if(saved)config=normalize(JSON.parse(saved));}catch(e){console.warn('تعذر استعادة الأسئلة المحفوظة',e);}}
@@ -17,7 +17,7 @@ let session=[],results=[],selectedIndex=-1,answered=false,timerId=null,timeLeft=
 const save=()=>{if(!isTeacher)return;try{localStorage.setItem(key,JSON.stringify(config));}catch(e){$('exportProgress').textContent='تعذر الحفظ التلقائي على الجهاز؛ يمكن حفظ ملف الأسئلة يدويًا.';}};
 const emitFile=(blob,name)=>{let a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),15000);};
 function show(id){for(let x of ['editor','studentStart','playView'])$(x).hidden=x!==id;$('btnHome').hidden=!isTeacher||id==='editor';}
-function updateHeader(){$('appName').textContent=config.title;$('schoolName').textContent=config.school;$('welcomeGameTitle').textContent=config.title;$('welcomeSchool').textContent=config.school;$('footerLabel').textContent='لعبة تعليمية مستقلة · '+config.school+' · WebGL ثلاثي الأبعاد · لا تحتاج اتصالًا بالإنترنت';document.title=config.title+' | مستقل دون إنترنت';}
+function updateHeader(){const teacher=(config.teacher||'').trim(),classroom=(config.classroom||'').trim();$('appName').textContent=config.title;$('schoolName').textContent=config.school;$('welcomeGameTitle').textContent=config.title;$('welcomeSchool').textContent=[config.school,teacher?('المعلمة: '+teacher):'',classroom?('الصف: '+classroom):''].filter(Boolean).join(' · ');$('footerLabel').textContent=['لعبة تعليمية مستقلة',config.school,teacher?('المعلمة: '+teacher):'',classroom?('الصف: '+classroom):'','WebGL ثلاثي الأبعاد','لا تحتاج اتصالًا بالإنترنت'].filter(Boolean).join(' · ');document.title=config.title+' | مستقل دون إنترنت';}
 function renderEditor(){
  const area=$('questionsEditor');area.replaceChildren();
  config.questions.forEach((q,i)=>{
@@ -59,6 +59,7 @@ function shuffle(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.rand
 function newSession(){validate();session=clone(config.questions);if(config.shuffle)shuffle(session);results=[];selectedIndex=-1;answered=false;playing=true;gameReady=false;clearInterval(timerId);token='local-'+Date.now()+'-'+Math.random().toString(36).slice(2);$('questionOverlay').hidden=true;$('resultsOverlay').hidden=true;updateHeader();show('playView');
  const frame=$('gameFrame');frame.src='runtime/games/football/index.html?standalone=1&seed='+Date.now();
 }
+function brandingPayload(){return{school:config.school,teacher:config.teacher,classroom:config.classroom};}
 function toGame(data){const f=$('gameFrame');if(f.contentWindow)f.contentWindow.postMessage({...data,token},location.origin);}
 function answer(correct,reply){if(answered||selectedIndex<0)return;answered=true;clearInterval(timerId);$('questionOverlay').hidden=true;
  const q=session[selectedIndex];results[selectedIndex]={correct:!!correct,question:q.text,chosen:reply??-1,right:q.correct,timeout:reply===-1};
@@ -85,7 +86,7 @@ function finish(){playing=false;clearInterval(timerId);$('questionOverlay').hidd
  $('backResult').hidden=!isTeacher;$('resultsOverlay').hidden=false;
 }
 function handleMessage(e){if(e.origin!==location.origin||e.source!==$('gameFrame').contentWindow||!playing)return;const m=e.data;if(!m||typeof m!=='object')return;
- if(m.type==='school-football-ready'&&!gameReady){gameReady=true;toGame({type:'school-football-config',title:config.title,school:config.school,count:session.length});return;}
+ if(m.type==='school-football-ready'&&!gameReady){gameReady=true;toGame({type:'school-football-config',title:config.title,count:session.length,...brandingPayload()});return;}
  if(m.token!==token)return;
  if(m.type==='school-football-question'){if(selectedIndex===m.index&&!answered&&$('questionOverlay').hidden===false)return;question(Number(m.index));}
  if(m.type==='school-football-fullscreen'){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});else document.exitFullscreen?.().catch(()=>{});}
@@ -95,7 +96,7 @@ function handleMessage(e){if(e.origin!==location.origin||e.source!==$('gameFrame
    toGame({type:'school-football-advance',index:m.index});
  }
 }
-function resultText(){const correct=results.filter(x=>x?.correct).length,lines=[config.title,config.school,'اللاعب: '+(player||'غير محدد'),'التاريخ: '+new Date().toLocaleString('ar-QA'),'النتيجة: '+correct+' / '+session.length,''];results.forEach((r,i)=>{if(!r)return;lines.push((i+1)+'. '+r.question);lines.push('الإجابة: '+(r.chosen===-1?'انتهى الوقت':session[i].options[r.chosen]));lines.push('الصحيح: '+session[i].options[r.right]);lines.push(r.correct?'صحيحة':'غير صحيحة');lines.push('');});return lines.join('\r\n');}
+function resultText(){const correct=results.filter(x=>x?.correct).length,lines=[config.title,config.school,'المعلمة: '+(config.teacher||'غير محدد'),'الصف: '+(config.classroom||'غير محدد'),'اللاعب: '+(player||'غير محدد'),'التاريخ: '+new Date().toLocaleString('ar-QA'),'النتيجة: '+correct+' / '+session.length,''];results.forEach((r,i)=>{if(!r)return;lines.push((i+1)+'. '+r.question);lines.push('الإجابة: '+(r.chosen===-1?'انتهى الوقت':session[i].options[r.chosen]));lines.push('الصحيح: '+session[i].options[r.right]);lines.push(r.correct?'صحيحة':'غير صحيحة');lines.push('');});return lines.join('\r\n');}
 const nameSafe=s=>s.trim().replace(/[\\/:*?"<>|]+/g,'-').slice(0,55)||'football';
 const fixedExportFiles=['index.html','style.css','app.js','zip.js','assets-manifest.js','offline-server.ps1','offline-server.js','START_GAME_WINDOWS.bat','START_GAME_NODE.bat','README_AR.txt'];
 let exporting=false;
@@ -125,8 +126,8 @@ function bind(){
  $('downloadResult').onclick=()=>emitFile(new Blob([resultText()],{type:'text/plain;charset=utf-8'}),'football_result.txt');
  window.addEventListener('message',handleMessage);
  if(!isTeacher)return;
- $('gameTitle').value=config.title;$('schoolTitle').value=config.school;$('quizTime').value=String(config.duration);$('shuffleQuestions').checked=config.shuffle;
- $('gameTitle').oninput=e=>{config.title=e.target.value;save();updateHeader();};$('schoolTitle').oninput=e=>{config.school=e.target.value;save();updateHeader();if(playing && gameReady)toGame({type:'school-football-school-update',school:config.school});};
+ $('gameTitle').value=config.title;$('schoolTitle').value=config.school;$('teacherName').value=config.teacher;$('className').value=config.classroom;$('quizTime').value=String(config.duration);$('shuffleQuestions').checked=config.shuffle;
+ $('gameTitle').oninput=e=>{config.title=e.target.value;save();updateHeader();};$('schoolTitle').oninput=e=>{config.school=e.target.value;save();updateHeader();if(playing && gameReady)toGame({type:'school-football-branding-update',...brandingPayload()});};$('teacherName').oninput=e=>{config.teacher=e.target.value;save();updateHeader();if(playing && gameReady)toGame({type:'school-football-branding-update',...brandingPayload()});};$('className').oninput=e=>{config.classroom=e.target.value;save();updateHeader();if(playing && gameReady)toGame({type:'school-football-branding-update',...brandingPayload()});};
  $('quizTime').onchange=e=>{config.duration=Number(e.target.value);save();};$('shuffleQuestions').onchange=e=>{config.shuffle=e.target.checked;save();};
  $('questionsEditor').addEventListener('input',handleEdit);$('questionsEditor').addEventListener('change',handleEdit);
  $('questionsEditor').addEventListener('click',e=>{

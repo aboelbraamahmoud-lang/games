@@ -119,8 +119,10 @@
     const c = cvs(4096, 64); drawLedMessages(c, messages);
     return ctex(c, { repeat: true });
   }
-  const cleanSchool = value => String(value || '').replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, 120) || 'اسم المدرسة';
-  const messagesFor = school => [school, 'كرة القدم', school, 'تعلّم · العب · تفوّق', school, 'روح رياضية', school, 'أجب وسجّل هدفك'];
+  const cleanText = (value, fallback, max = 120) => String(value || '').replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, max) || fallback;
+  const cleanSchool = value => cleanText(value, 'اسم المدرسة', 120);
+  const cleanMeta = meta => ({ school: cleanSchool(typeof meta === 'string' ? meta : meta?.school), teacher: cleanText(typeof meta === 'string' ? '' : meta?.teacher, 'اسم المعلمة', 120), classroom: cleanText(typeof meta === 'string' ? '' : meta?.classroom, 'الصف', 80) });
+  const messagesFor = meta => { const m = cleanMeta(meta); return [m.school, 'المعلمة: ' + m.teacher, 'الصف: ' + m.classroom, m.school, 'تعلّم · العب · تفوّق', 'كرة القدم', m.school, 'أجب وسجّل هدفك']; };
 
   /* ---------------- builders ---------------- */
   function buildPitch(group, q) {
@@ -183,8 +185,8 @@
     return out;
   }
 
-  function buildAdBoards(group, quality, schoolName) {
-    const tex = ledTexture(messagesFor(schoolName));
+  function buildAdBoards(group, quality, meta) {
+    const tex = ledTexture(messagesFor(meta));
     const mk = (len, x, z, ry, repeat) => {
       const t = tex.clone(); t.needsUpdate = true; t.repeat.set(repeat, 1);
       const black = () => new T.MeshStandardMaterial({ color: FB.color(0x15181c) });
@@ -201,16 +203,18 @@
     tex.dispose();
     return {
       textures,
-      setSchool(name) {
-        drawLedMessages(textures[0].image, messagesFor(cleanSchool(name)));
+      setBranding(meta) {
+        drawLedMessages(textures[0].image, messagesFor(meta));
         for (const item of textures) item.needsUpdate = true;
-      }
+      },
+      setSchool(name) { this.setBranding({ school: name }); }
     };
   }
 
-  function buildScoreboard(group, schoolName) {
+  function buildScoreboard(group, meta) {
     const c = cvs(1024, 320), x = c.getContext('2d'), tex = ctex(c);
-    const state = { home: 0, away: 0, label: '', school: cleanSchool(schoolName) };
+    const meta0 = cleanMeta(meta);
+    const state = { home: 0, away: 0, label: '', school: meta0.school, teacher: meta0.teacher, classroom: meta0.classroom };
     const draw = () => {
       x.fillStyle = '#0b0f14'; x.fillRect(0, 0, 1024, 320);
       const g = x.createLinearGradient(0, 0, 1024, 0); g.addColorStop(0, MAROON); g.addColorStop(0.5, '#a3194a'); g.addColorStop(1, MAROON); x.fillStyle = g; x.fillRect(0, 0, 1024, 70);
@@ -225,7 +229,7 @@
       x.fillStyle = '#ffd98a'; x.font = 'bold 150px "DejaVu Sans",Arial,sans-serif'; x.direction = 'ltr';
       x.fillText(String(state.home), 760, 225); x.fillText(String(state.away), 264, 225); x.fillText('–', 512, 220);
       x.fillStyle = '#b8c4cc'; x.font = '30px "Segoe UI",Tahoma,Arial,sans-serif'; x.direction = 'rtl';
-      x.fillText(state.label || 'كرة القدم', 512, 290, 940);
+      x.fillText(state.label || ('المعلمة: ' + state.teacher + ' · الصف: ' + state.classroom), 512, 290, 940);
       tex.needsUpdate = true;
     };
     draw();
@@ -235,7 +239,8 @@
     return {
       mesh: m,
       set(h, a, label) { state.home = h; state.away = a; if (label !== undefined) state.label = label; draw(); },
-      setSchool(name) { const next = cleanSchool(name); if (next !== state.school) { state.school = next; draw(); } }
+      setBranding(meta) { const next = cleanMeta(meta); state.school = next.school; state.teacher = next.teacher; state.classroom = next.classroom; draw(); },
+      setSchool(name) { this.setBranding({ school: name, teacher: state.teacher, classroom: state.classroom }); }
     };
   }
 
@@ -325,12 +330,13 @@
 
   /* ---------------- public ---------------- */
   /** quality: {level:0|1|2, shadow:int, crowd:int} */
-  function build(scene, quality = {}, schoolName = 'اسم المدرسة') {
+  function build(scene, quality = {}, schoolMeta = 'اسم المدرسة') {
     const q = quality.level === undefined ? 2 : quality.level;
     const group = new T.Group(); group.name = 'stadium'; scene.add(group);
     scene.background = new T.Color(0x0a1226); scene.fog = new T.FogExp2(FB.color(0x1a2b4a), q > 0 ? 0.0042 : 0.006);
     const sky = buildSky(scene, q);
-    const pit = buildPitch(group, q), goalMat = buildGoal(group), flags = buildFlags(group), ads = buildAdBoards(group, q, cleanSchool(schoolName)), boards = ads.textures, score = buildScoreboard(group, schoolName);
+    const meta = cleanMeta(schoolMeta);
+    const pit = buildPitch(group, q), goalMat = buildGoal(group), flags = buildFlags(group), ads = buildAdBoards(group, q, meta), boards = ads.textures, score = buildScoreboard(group, meta);
     const bowl = buildBowl(group, q), lights = buildFloodlights(group, q); buildDugouts(group); buildTunnel(group);
     const net = new FB.Net({ q: q > 1 ? 1 : 0.7 }); group.add(net.group);
     // light rig: warm hemisphere + a strong floodlight key with soft shadows that follows the action
@@ -340,7 +346,8 @@
     const fill = new T.DirectionalLight(FB.color(0xbfd4ff), 0.38); fill.position.set(-20, 25, 40); scene.add(fill);
     const api = {
       group, sky, pitch: pit.pitch, net, key, hemi, fill, score, boards, flags, bowl, lights, quality: q,
-      setSchoolName(name) { const school = cleanSchool(name); ads.setSchool(school); score.setSchool(school); },
+      setBranding(meta) { const clean = cleanMeta(meta); ads.setBranding(clean); score.setBranding(clean); },
+      setSchoolName(name) { this.setBranding({ school: name }); },
       focus(x, z) { // keep the shadow frustum centred on the action (snapped to texels to avoid shimmering)
         const k = key, sz = 32 / (quality.shadow || 1024); const sx = Math.round(x / sz) * sz, szz = Math.round(z / sz) * sz;
         k.target.position.set(sx, 0, szz); k.position.set(sx + 18, 40, szz + 12);

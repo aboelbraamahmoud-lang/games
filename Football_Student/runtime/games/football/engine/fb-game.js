@@ -47,7 +47,7 @@
     : [{ text: 'كم لاعبًا يبدأ المباراة في كل فريق لكرة القدم؟', options: ['11 لاعبًا', '9 لاعبين', '7 لاعبين', '12 لاعبًا'], correct: 0 }, { text: 'ما ناتج 8 × 7؟', options: ['54', '56', '64', '48'], correct: 1 }, { text: 'ما عاصمة دولة قطر؟', options: ['الوكرة', 'الخور', 'الدوحة', 'دخان'], correct: 2 }];
   const S = {
     phase: 'loading', round: 0, total: params.get('demo') === 'long' ? 1 : 3, goals: 0, results: [], correct: false, pending: false, feedback: '', result: '', variant: '',
-    token: '', school: 'اسم المدرسة', configReady: !embedded, gameMode: null, attempt: 0, title: '', assetsReady: false, live: false, replaying: false, lite: false, introDone: false, elapsed: 0, aim: { x: 0, y: 0.5, power: 0.7 }, aimTouched: false, stateT: 0, outcomeT: 0, passOptions: []
+    token: '', school: 'اسم المدرسة', teacher: 'اسم المعلمة', classroom: 'الصف', configReady: !embedded, gameMode: null, attempt: 0, title: '', assetsReady: false, live: false, replaying: false, lite: false, introDone: false, elapsed: 0, aim: { x: 0, y: 0.5, power: 0.7 }, aimTouched: false, stateT: 0, outcomeT: 0, passOptions: []
   };
   let renderer, scene, camera, stadium, crowd, ballView, fx, match, director, replay, audio;
   const audioInst = new FB.Audio({ base: '../football/assets', onState: st => syncSound(st) });
@@ -111,7 +111,7 @@
       const eye = FB.Char.loadTexture(base + '/textures/eye_brown.png');
       await Promise.all(builds.map(async n => { assets[n] = await FB.Char.load(base, n); tex[n] = { skinClean: await FB.Char.loadTexture(`${base}/textures/skin_${n}_clean.jpg`), skinStubble: await FB.Char.loadTexture(`${base}/textures/skin_${n}_stubble.jpg`), eye: await eye }; setLoad(0.2 + 0.1 * builds.indexOf(n)); }));
       setLoad(0.45, 'جارٍ بناء المدرجات…'); await nextFrame();
-      stadium = FB.Stadium.build(scene, { level: tier.level, shadow: tier.shadow }, S.school); setLoad(0.62); await nextFrame();
+      stadium = FB.Stadium.build(scene, { level: tier.level, shadow: tier.shadow }, { school: S.school, teacher: S.teacher, classroom: S.classroom }); setLoad(0.62); await nextFrame();
       crowd = FB.Crowd.build(scene, stadium, { count: tier.crowd, reduced: reduced() }); crowd.setReduced(reduced()); setLoad(0.75, 'جارٍ إدخال اللاعبين…'); await nextFrame();
       ballView = FB.BallView.create(scene); fx = FB.Fx.create(scene, { reduced: reduced() });
       const seed = params.get('seed') ? (+params.get('seed') || 1) : (Math.floor(Math.random() * 1e9) + 1);
@@ -421,22 +421,25 @@
   let litePrev = 0; function liteLoop(now) { const dt = Math.min((now - (litePrev || now)) / 1000, 0.1); litePrev = now; if (!manualMode) { S.elapsed += dt; runTimers(dt); } rafId = requestAnimationFrame(liteLoop); }
 
   /* ------------------------------------------------------------------ protocol */
-  function applySchool(name) {
-    S.school = String(name || '').replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, 120) || 'اسم المدرسة';
+  function cleanText(value, fallback, max = 120) { return String(value || '').replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, max) || fallback; }
+  function applyBranding(meta = {}) {
+    S.school = cleanText(meta.school, 'اسم المدرسة', 120);
+    S.teacher = cleanText(meta.teacher, 'اسم المعلمة', 120);
+    S.classroom = cleanText(meta.classroom, 'الصف', 80);
     const label = $('welcome').querySelector('.eyebrow');
     if (label) label.textContent = 'كرة القدم التعليمية · ' + S.school;
     const credit = document.querySelector('.credit');
-    if (credit) credit.textContent = S.school + ' · كرة القدم';
-    $('taskTitle').textContent = S.school;
+    if (credit) credit.textContent = [S.school, 'المعلمة: ' + S.teacher, 'الصف: ' + S.classroom].filter(Boolean).join(' · ');
+    $('taskTitle').textContent = [S.school, S.classroom].filter(Boolean).join(' · ');
     document.title = (S.title || 'كرة القدم التعليمية') + ' | ' + S.school;
-    if (stadium) stadium.setSchoolName(S.school);
+    if (stadium) stadium.setBranding({ school: S.school, teacher: S.teacher, classroom: S.classroom });
     if (FB.Kit && FB.Kit.KITS && FB.Kit.KITS.home) FB.Kit.KITS.home.name = S.school;
   }
 
   window.addEventListener('message', e => {
     if (!embedded || e.origin !== location.origin || e.source !== parent) return; const m = e.data; if (!m || typeof m !== 'object') return;
-    if (m.type === 'school-football-config' && !S.configReady) { S.total = Math.max(1, Math.min(100, Number(m.count) || 1)); S.token = String(m.token || ''); S.configReady = true; S.title = String(m.title || 'كرة القدم التعليمية'); $('modeLabel').textContent = S.title; applySchool(m.school); updateHud(); ready(); }
-    else if (m.type === 'school-football-school-update' && m.token === S.token) { applySchool(m.school); }
+    if (m.type === 'school-football-config' && !S.configReady) { S.total = Math.max(1, Math.min(100, Number(m.count) || 1)); S.token = String(m.token || ''); S.configReady = true; S.title = String(m.title || 'كرة القدم التعليمية'); $('modeLabel').textContent = S.title; applyBranding(m); updateHud(); ready(); }
+    else if ((m.type === 'school-football-school-update' || m.type === 'school-football-branding-update') && m.token === S.token) { applyBranding(m); }
     else if (m.token === S.token && m.index === S.round) {
       if (m.type === 'school-football-result') resolve(m);
       if (m.type === 'school-football-retry' && S.phase === 'outcome') $('next').disabled = false;

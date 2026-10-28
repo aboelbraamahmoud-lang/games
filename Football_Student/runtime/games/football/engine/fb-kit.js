@@ -5,7 +5,7 @@
   const FB = root.FB = root.FB || {};
 
   const KITS = {
-    home: { id: 'home', name: 'المدرسة', jersey: '#8a1538', jersey2: '#6e102d', trim: '#f7f2e8', accent: '#cfa95a', shorts: '#f4efe4', shortsStripe: '#8a1538', socks: '#8a1538', sockBand: '#f7f2e8', boots: '#15181b', numberColor: '#f7f2e8', numberOutline: '#cfa95a', crestA: '#8a1538' },
+    home: { id: 'home', name: 'المدرسة', jersey: '#8a1538', jersey2: '#6f102d', trim: '#f7f2e8', accent: '#f7f2e8', shorts: '#8a1538', shortsStripe: '#f7f2e8', socks: '#8a1538', sockBand: '#f7f2e8', boots: '#15181b', numberColor: '#f7f2e8', numberOutline: '#6f102d', crestA: '#8a1538' },
     away: { id: 'away', name: 'الضيوف', jersey: '#ece6d6', jersey2: '#d9d1bd', trim: '#16505b', accent: '#c9a24f', shorts: '#16505b', shortsStripe: '#ece6d6', socks: '#ece6d6', sockBand: '#16505b', boots: '#1b1f22', numberColor: '#16505b', numberOutline: '#c9a24f', crestA: '#16505b' },
     ref: { id: 'ref', name: 'حكم', jersey: '#f2c230', jersey2: '#d9a91c', trim: '#161616', accent: '#161616', shorts: '#161616', shortsStripe: '#2a2a2a', socks: '#161616', sockBand: '#f2c230', boots: '#101010', numberColor: '#161616', numberOutline: 'rgba(0,0,0,0)' },
     keeperHome: { id: 'keeperHome', name: 'حارس', jersey: '#2cb862', jersey2: '#1f8f4a', trim: '#0f1a14', accent: '#e8ff7a', shorts: '#101a14', shortsStripe: '#2cb862', socks: '#101a14', sockBand: '#2cb862', boots: '#101010', numberColor: '#0f1a14', numberOutline: '#e8ff7a', glove: '#e8ff4d' },
@@ -121,11 +121,22 @@
     } else if (mode === 'name') {
       x.font = 'bold 54px Arial, "DejaVu Sans", sans-serif'; x.fillStyle = k.numberColor; x.fillText(String(number).toUpperCase(), 128, 128);
     } else if (mode === 'crest') {
-      // school crest: crescent-and-star in a shield, original geometric design
-      x.fillStyle = k.accent; x.beginPath(); x.moveTo(40, 30); x.lineTo(216, 30); x.lineTo(216, 130); x.quadraticCurveTo(216, 220, 128, 236); x.quadraticCurveTo(40, 220, 40, 130); x.closePath(); x.fill();
-      x.fillStyle = k.crestA || k.jersey; x.beginPath(); x.moveTo(52, 42); x.lineTo(204, 42); x.lineTo(204, 128); x.quadraticCurveTo(204, 208, 128, 224); x.quadraticCurveTo(52, 208, 52, 128); x.closePath(); x.fill();
-      x.fillStyle = '#f7f2e8'; x.beginPath(); x.arc(128, 120, 46, 0, Math.PI * 2); x.fill(); x.fillStyle = k.crestA || k.jersey; x.beginPath(); x.arc(142, 120, 40, 0, Math.PI * 2); x.fill();
-      x.fillStyle = k.accent; for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 4 * Math.PI / 5, r = 16; i ? x.lineTo(150 + Math.cos(a) * r, 120 + Math.sin(a) * r) : (x.beginPath(), x.moveTo(150 + Math.cos(a) * r, 120 + Math.sin(a) * r)); } x.closePath(); x.fill();
+      // Qatar-football-inspired chest badge for the home team.
+      x.save();
+      x.translate(128, 128);
+      x.fillStyle = '#f7f2e8'; x.beginPath(); x.arc(0, 0, 98, 0, Math.PI * 2); x.fill();
+      x.lineWidth = 12; x.strokeStyle = k.crestA || k.jersey; x.stroke();
+      x.fillStyle = k.crestA || k.jersey; x.beginPath(); x.arc(0, 0, 82, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#f7f2e8'; x.beginPath(); x.arc(0, 0, 68, 0, Math.PI * 2); x.fill();
+      x.save(); x.translate(-52, -48); x.fillStyle = k.crestA || k.jersey; x.beginPath(); x.moveTo(0, 0); x.lineTo(54, 0);
+      for (let i = 0; i < 6; i++) { const yy = i * 16; x.lineTo(34, yy + 8); x.lineTo(54, yy + 16); }
+      x.lineTo(0, 96); x.closePath(); x.fill(); x.restore();
+      x.fillStyle = '#f7f2e8'; x.beginPath(); x.arc(0, 16, 24, 0, Math.PI * 2); x.fill();
+      x.strokeStyle = k.crestA || k.jersey; x.lineWidth = 4; x.beginPath(); x.arc(0, 16, 24, 0, Math.PI * 2); x.stroke();
+      x.beginPath(); x.moveTo(-18, 16); x.lineTo(18, 16); x.moveTo(0, -2); x.lineTo(0, 34); x.stroke();
+      x.fillStyle = k.crestA || k.jersey; x.font = 'bold 28px Arial, "DejaVu Sans", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText('QFA', 18, -26);
+      x.restore();
     }
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t;
   }
