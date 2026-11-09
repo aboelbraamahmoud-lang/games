@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" style="--accent: #45dfff; --bg: #07152d;"><head><script>Object.defineProperty(window,'localStorage',{configurable:true,value:(()=>{const data={};return {getItem:k=>Object.prototype.hasOwnProperty.call(data,k)?data[k]:null,setItem:(k,v)=>data[k]=String(v),removeItem:k=>delete data[k],clear:()=>Object.keys(data).forEach(k=>delete data[k])}})()});</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بطلات التحدّي | مدرسة الفلاح الابتدائية للبنات</title>
+<style>
+:root{
+  --bg:#07152d; --bg2:#0b315e; --panel:rgba(7,21,45,.82); --panel2:#0c2447;
+  --text:#f8fbff; --muted:#a9c2df; --line:rgba(255,255,255,.12);
+  --accent:#45dfff; --accent2:#1888ff; --gold:#ffd45d; --green:#64f4a5;
+  --danger:#ff6a7b; --shadow:0 24px 80px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:
+radial-gradient(circle at 15% 15%,rgba(38,128,255,.22),transparent 24%),
+radial-gradient(circle at 85% 18%,rgba(0,227,255,.12),transparent 22%),
+linear-gradient(150deg,var(--bg),var(--bg2));color:var(--text);overflow:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+#starLayer,#starLayer2{position:fixed;inset:0;pointer-events:none;z-index:0;background-repeat:repeat}
+#starLayer{background-image:radial-gradient(#fff 1px,transparent 1.2px),radial-gradient(#8fe8ff 1px,transparent 1.2px);background-size:58px 58px,91px 91px;opacity:.55;animation:drift 35s linear infinite}
+#starLayer2{background-image:radial-gradient(#fff 1.5px,transparent 1.7px);background-size:140px 140px;opacity:.25;animation:drift 65s linear infinite reverse}
+@keyframes drift{to{transform:translateY(90px)}}
+.app{height:100%;position:relative;z-index:2;display:grid;grid-template-columns:320px 1fr;gap:16px;padding:16px}
+.panel{background:var(--panel);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow)}
+.sidebar{padding:16px;display:flex;flex-direction:column;min-height:0}
+.brand{display:flex;gap:12px;align-items:center;padding:5px 5px 14px}
+.brand-logo{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 0 30px rgba(69,223,255,.2)}
+.brand h1{margin:0;font-size:19px}.brand small{color:var(--muted)}
+.identity{padding:12px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);margin-bottom:12px}
+.identity b{display:block;font-size:14px}.identity span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.stat{padding:11px 7px;border-radius:15px;background:rgba(255,255,255,.055);text-align:center;border:1px solid rgba(255,255,255,.07)}
+.stat b{display:block;font-size:20px}.stat span{font-size:10px;color:var(--muted)}
+.label{font-size:12px;color:#d8ebff;margin:7px 3px}
+.name-list{flex:1;overflow:auto;scrollbar-width:thin;padding-left:3px}
+.name-chip{display:flex;align-items:center;gap:9px;margin:6px 0;padding:9px 10px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06)}
+.name-chip.used{opacity:.38;text-decoration:line-through}.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.side-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.btn{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.075);color:white;border-radius:14px;padding:10px 12px;transition:.18s}
+.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.12)}
+.btn.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));font-weight:850}
+.btn.gold{background:linear-gradient(135deg,#e3a91f,#ffe790);color:#392700;font-weight:900}
+.btn.green{background:linear-gradient(135deg,#19b968,#76f7ad);color:#052717;font-weight:900}
+.btn.danger{background:linear-gradient(135deg,#ba354d,#ff7182)}
+.btn.full{grid-column:1/-1}
+.main{position:relative;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.topbar{padding:15px 19px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.heading h2{margin:0;font-size:26px}.heading p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.header-actions{display:flex;gap:7px;flex-wrap:wrap}
+.game-strip{display:flex;gap:9px;overflow:auto;padding:2px 18px 12px;scrollbar-width:thin}
+.game-card{min-width:142px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);color:white;border-radius:17px;padding:10px 12px;text-align:right;transition:.18s}
+.game-card:hover{transform:translateY(-2px)}.game-card.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(69,223,255,.22),0 8px 25px rgba(69,223,255,.12);background:rgba(69,223,255,.1)}
+.game-card .ico{font-size:24px}.game-card b{display:block;font-size:13px;margin-top:3px}.game-card small{color:var(--muted);font-size:10px}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden;display:grid;place-items:center}
+.control-center{position:absolute;z-index:30;top:24px;left:50%;transform:translateX(-50%);width:min(720px,82%);padding:15px;border-radius:24px;text-align:center;background:rgba(4,17,39,.64);border:1px solid rgba(140,228,255,.19);backdrop-filter:blur(15px);box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.control-center .caption{font-size:12px;color:var(--muted)}.name-screen{height:58px;display:grid;place-items:center;font-size:31px;font-weight:1000;text-shadow:0 0 25px rgba(69,223,255,.38)}
+.name-screen.spin{animation:pulse .14s alternate infinite}@keyframes pulse{to{transform:scale(1.035);color:#c9f9ff}}
+.start-btn{
+  position:relative;z-index:80;display:block;width:min(430px,92%);margin:6px auto 0;
+  border:0;border-radius:20px;padding:16px 20px;font-size:18px;font-weight:1000;color:#09223a;
+  background:linear-gradient(135deg,var(--gold),#fff1aa);box-shadow:0 10px 34px rgba(255,212,93,.25),inset 0 1px white;
+  pointer-events:auto;touch-action:manipulation;
+}
+.start-btn:hover{transform:translateY(-2px)}.start-btn:disabled{opacity:.45;cursor:not-allowed}
+.stage-visual{position:absolute;inset:0;pointer-events:none}
+
+/* ROCKET */
+.rocket-scene .planet{position:absolute;left:-150px;bottom:-220px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle at 65% 30%,#42d5ff 0 8%,#126fca 30%,#082e6e 66%,#041831 100%);box-shadow:inset -50px -30px 90px rgba(0,0,0,.55),0 0 110px rgba(40,162,255,.2)}
+.rocket-wrap{position:absolute;left:50%;bottom:45px;transform:translateX(-50%);width:170px;height:290px}
+.rocket{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-size:124px;filter:drop-shadow(0 14px 20px rgba(0,0,0,.35));z-index:3}
+.flame{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:58px;height:85px;background:linear-gradient(#fff6ad,#ffb52c,#ff4f32,transparent);clip-path:polygon(50% 100%,4% 8%,50% 0,96% 8%);opacity:.35}
+.rocket-wrap.ready .flame{opacity:1;animation:flame .12s infinite alternate}@keyframes flame{to{height:105px;filter:blur(3px)}}
+@keyframes rocketLaunch{0%{transform:translateX(-50%) translateY(0)}20%{transform:translateX(-50%) translateY(8px)}100%{transform:translateX(-50%) translateY(-950px)}}
+.rocket-wrap.go{animation:rocketLaunch 3.2s cubic-bezier(.44,.05,.2,.99) forwards}
+.pad{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);width:250px;height:24px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,233,255,.75),rgba(23,79,135,.2) 64%,transparent 75%)}
+
+/* VAULT */
+.vault-scene{background:radial-gradient(circle at center,rgba(255,202,62,.08),transparent 40%)}
+.vault-box{position:absolute;left:50%;bottom:55px;transform:translateX(-50%);width:310px;height:285px;border-radius:35px;background:linear-gradient(145deg,#3e4a5e,#121b2d);border:14px solid #c9a84e;box-shadow:inset 0 0 45px rgba(0,0,0,.7),0 25px 70px rgba(0,0,0,.45)}
+.vault-door{position:absolute;inset:15px;border-radius:20px;border:7px solid #8c7438;background:radial-gradient(circle,#31415b,#142139 64%);transform-origin:left;transition:transform 1.3s cubic-bezier(.17,.84,.44,1)}
+.vault-door.open{transform:perspective(900px) rotateY(-105deg)}
+.vault-wheel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:130px;height:130px;border-radius:50%;border:12px solid #d9bd68;box-shadow:inset 0 0 0 8px #735d27}
+.vault-wheel:before,.vault-wheel:after{content:"";position:absolute;left:50%;top:50%;width:12px;height:155px;background:#d9bd68;border-radius:10px;transform:translate(-50%,-50%)}
+.vault-wheel:after{transform:translate(-50%,-50%) rotate(90deg)}
+.vault-door.crack .vault-wheel{animation:wheel .35s linear infinite}@keyframes wheel{to{transform:translate(-50%,-50%) rotate(180deg)}}
+.gold-glow{position:absolute;left:50%;bottom:100px;transform:translateX(-50%);width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#fff5a3,rgba(255,197,52,.4),transparent 70%);opacity:0}.gold-glow.show{animation:glow 1.2s forwards}@keyframes glow{to{opacity:1;transform:translateX(-50%) scale(1.8)}}
+
+/* PORTAL */
+.portal-scene{background:radial-gradient(circle at center,rgba(115,76,255,.14),transparent 47%)}
+.portal{position:absolute;left:50%;bottom:55px;transform:translateX(-50%);width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,#b8fbff 0 5%,#5b2dc4 18%,#092b68 43%,transparent 61%);box-shadow:0 0 80px #6d4dff, inset 0 0 55px #37d9ff;animation:portalSpin 5s linear infinite}
+.portal:before{content:"";position:absolute;inset:-28px;border-radius:50%;border:10px dashed rgba(115,220,255,.55);animation:portalSpin 7s linear infinite reverse}
+@keyframes portalSpin{to{transform:rotate(360deg)}}
+.portal.flash{animation:portalBlast .8s ease}@keyframes portalBlast{50%{filter:brightness(2.5);transform:scale(1.12)}}
+
+/* BOXES */
+.boxes-scene{background:radial-gradient(circle at 50% 70%,rgba(255,114,170,.1),transparent 45%)}
+.box-row{position:absolute;left:50%;bottom:85px;transform:translateX(-50%);display:flex;gap:30px}
+.gift{width:135px;height:120px;border-radius:20px;background:linear-gradient(145deg,#7e38e8,#c05bff);border:4px solid rgba(255,255,255,.18);box-shadow:0 18px 40px rgba(0,0,0,.32);position:relative}
+.gift:nth-child(2){background:linear-gradient(145deg,#e63b76,#ff7e56)}.gift:nth-child(3){background:linear-gradient(145deg,#0b9fd4,#4be6ca)}
+.gift:before{content:"";position:absolute;left:52px;top:0;width:24px;height:100%;background:rgba(255,231,111,.88)}.gift:after{content:"";position:absolute;left:0;top:42px;width:100%;height:24px;background:rgba(255,231,111,.88)}
+.gift.mix{animation:mix .35s ease-in-out infinite alternate}@keyframes mix{to{transform:translateY(-18px) rotate(4deg)}}.gift.selected{animation:boxPop .7s cubic-bezier(.17,.89,.32,1.5) forwards}@keyframes boxPop{to{transform:scale(1.23) translateY(-28px);filter:brightness(1.3)}}
+
+/* ARENA */
+.arena-scene{background:linear-gradient(to bottom,rgba(12,26,55,.1),rgba(11,12,24,.55)),radial-gradient(ellipse at center bottom,rgba(255,199,67,.13),transparent 58%)}
+.arena-floor{position:absolute;left:50%;bottom:-100px;transform:translateX(-50%);width:760px;height:320px;border-radius:50%;background:radial-gradient(ellipse,#214267,#0b1f3c 66%,transparent 69%);border:2px solid rgba(255,255,255,.08)}
+.spotlight{position:absolute;left:50%;bottom:140px;transform:translateX(-50%);width:160px;height:410px;clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);background:linear-gradient(to bottom,rgba(255,255,255,.72),rgba(255,219,103,.05));filter:blur(3px);opacity:.35}.spotlight.scan{animation:scan 1.2s ease-in-out infinite alternate}@keyframes scan{from{left:28%}to{left:72%}}
+.trophy{position:absolute;left:50%;bottom:62px;transform:translateX(-50%);font-size:150px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.42))}
+
+/* overlays */
+.countdown,.winner{position:absolute;inset:0;display:none;place-items:center;z-index:100}
+.countdown{background:radial-gradient(circle,rgba(14,77,148,.25),rgba(3,12,27,.72))}
+.countdown.show,.winner.show{display:none}
+.count{font-size:min(24vw,230px);font-weight:1000;text-shadow:0 0 60px rgba(85,230,255,.72);animation:countpop .7s ease}@keyframes countpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.1);opacity:1}}
+.winner{background:radial-gradient(circle,rgba(25,122,219,.30),rgba(3,12,27,.84));padding:25px}
+.winner-card{width:min(760px,94%);border-radius:34px;padding:32px;text-align:center;background:linear-gradient(180deg,rgba(13,42,79,.96),rgba(5,21,44,.97));border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 100px rgba(0,0,0,.52),0 0 75px rgba(58,202,255,.16);animation:winnerIn .6s cubic-bezier(.17,.89,.32,1.35)}
+@keyframes winnerIn{from{transform:scale(.55) translateY(40px);opacity:0}}
+.badge{display:inline-flex;padding:7px 13px;border-radius:99px;background:rgba(255,212,93,.14);border:1px solid rgba(255,212,93,.35);color:#ffe794;font-weight:850}
+.winner-name{font-size:clamp(42px,7vw,82px);font-weight:1000;margin:19px 0 8px;background:linear-gradient(90deg,#fff,#70eeff,#fff2a6);-webkit-background-clip:text;color:transparent}
+.winner-sub{font-size:19px;color:#cbe8ff}.winner-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:22px}
+.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}.piece{position:absolute;top:-10%;width:10px;height:18px;border-radius:3px;animation:fall linear forwards}@keyframes fall{to{transform:translateY(120vh) rotate(900deg)}}
+
+/* modals/admin */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;place-items:center;padding:18px}.modal.show{display:grid}
+.modal-card{width:min(720px,96%);max-height:88vh;overflow:auto;background:#0b2142;border:1px solid rgba(255,255,255,.14);border-radius:25px;padding:22px;box-shadow:var(--shadow)}
+.modal-card.wide{width:min(1060px,97%)}.modal h3{margin:0 0 12px}.hint{color:var(--muted);font-size:12px}
+textarea,input,select{width:100%;background:#06172f;color:white;border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:10px;outline:none}
+textarea{min-height:260px;resize:vertical;line-height:1.7}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:#d7e9fb;font-size:12px;margin-bottom:5px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:15px;flex-wrap:wrap}
+.admin-tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.tab{white-space:nowrap}.tab.active{background:linear-gradient(135deg,var(--accent2),var(--accent));font-weight:850}
+.tab-page{display:none}.tab-page.active{display:block}
+.checkline{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.045);margin:6px 0}.checkline input{width:auto}
+.game-config{display:grid;grid-template-columns:130px 1fr 115px;gap:8px;align-items:center;margin:7px 0;padding:8px;border-radius:14px;background:rgba(255,255,255,.04)}
+.game-config input[type=checkbox]{width:auto}
+.play-only-hide{display:initial}
+body.play-only .admin-only{display:none!important}
+body.play-only .app{grid-template-columns:320px 1fr}
+body.play-only .play-only-hide{display:none!important}
+.status-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:99px;background:rgba(100,244,165,.10);border:1px solid rgba(100,244,165,.22);font-size:11px;color:#b8ffd4}
+@media(max-width:900px){
+ .app,body.play-only .app{grid-template-columns:1fr;padding:9px}.sidebar{display:none}.control-center{width:93%;top:15px}.game-strip{padding-inline:10px}.heading h2{font-size:20px}.game-card{min-width:125px}
+ .form-grid{grid-template-columns:1fr}.game-config{grid-template-columns:1fr}.rocket-wrap{transform:translateX(-50%) scale(.8)}.box-row{gap:10px}.gift{width:90px;height:85px}.gift:before{left:35px;width:18px}.gift:after{top:31px;height:18px}
+}
+
+/* ===== V3: clearer navigation + unobstructed stage + more realistic games ===== */
+.game-strip{padding:4px 18px 8px;gap:10px;scroll-behavior:smooth}
+.game-card{
+  position:relative;min-width:150px;padding:11px 13px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  border:1px solid rgba(255,255,255,.10);overflow:hidden
+}
+.game-card::after{content:"";position:absolute;inset:auto 0 0;height:3px;background:transparent}
+.game-card.active{background:linear-gradient(180deg,rgba(69,223,255,.18),rgba(24,136,255,.08));border-color:rgba(69,223,255,.85);box-shadow:0 8px 28px rgba(35,188,255,.17)}
+.game-card.active::after{background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.game-card.active small{color:#dffcff}
+.game-card .ico{filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
+.active-game-banner{
+  margin:0 18px 7px;padding:7px 12px;border-radius:12px;display:flex;align-items:center;gap:8px;
+  color:#dff8ff;background:rgba(69,223,255,.06);border:1px solid rgba(69,223,255,.13);font-size:11px
+}
+.active-game-banner b{font-size:12px}.active-game-banner small{color:var(--muted)}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:#66f7a6;box-shadow:0 0 0 0 rgba(102,247,166,.55);animation:livePulse 1.5s infinite}
+@keyframes livePulse{70%{box-shadow:0 0 0 9px rgba(102,247,166,0)}100%{box-shadow:0 0 0 0 rgba(102,247,166,0)}}
+
+.stage{padding-bottom:126px;background:
+ radial-gradient(circle at 50% 30%,rgba(52,133,225,.10),transparent 42%),
+ linear-gradient(180deg,rgba(4,16,37,.05),rgba(1,7,17,.36))}
+.control-center{
+  top:auto;bottom:12px;width:min(840px,92%);min-height:94px;padding:12px 14px;
+  display:grid;grid-template-columns:1fr minmax(250px,360px);grid-template-rows:auto auto;
+  column-gap:14px;align-items:center;text-align:right;background:rgba(4,16,37,.84);
+  border:1px solid rgba(140,228,255,.16);box-shadow:0 16px 45px rgba(0,0,0,.38);z-index:55
+}
+.control-center .caption{grid-column:1;grid-row:1;color:#9fc7e8;text-align:right}
+.name-screen{grid-column:1;grid-row:2;height:43px;justify-items:start;font-size:27px;text-align:right;overflow:hidden}
+.start-btn{
+  grid-column:2;grid-row:1/3;width:100%;height:62px;margin:0;padding:0 18px;
+  display:grid;place-items:center;z-index:70;pointer-events:auto
+}
+.stage-visual{opacity:0;visibility:hidden;transform:scale(.985);transition:opacity .28s ease,transform .35s ease;display:block!important}
+.stage-visual.active{opacity:1;visibility:visible;transform:scale(1)}
+.stage-visual::after{content:"";position:absolute;left:12%;right:12%;bottom:10px;height:70px;background:radial-gradient(ellipse,rgba(0,0,0,.34),transparent 67%);filter:blur(14px)}
+
+/* Rocket realism */
+.rocket-scene{background:
+ radial-gradient(circle at 72% 24%,rgba(74,151,255,.12),transparent 26%),
+ linear-gradient(180deg,rgba(2,11,28,.0),rgba(4,16,30,.24))}
+.space-haze{position:absolute;inset:0;background:radial-gradient(circle at 50% 64%,rgba(36,125,194,.08),transparent 35%)}
+.earth-horizon{position:absolute;left:-10%;right:-10%;bottom:-310px;height:470px;border-radius:50% 50% 0 0;background:
+ radial-gradient(ellipse at 50% 0,#1f8ec9 0 13%,#0b4d86 34%,#082e59 58%,#031528 78%);
+ box-shadow:0 -12px 60px rgba(80,197,255,.34),inset 0 35px 60px rgba(110,218,255,.12)}
+.launch-tower{position:absolute;left:calc(50% + 112px);bottom:64px;width:96px;height:330px;opacity:.9}
+.tower-leg{position:absolute;bottom:0;width:9px;height:100%;background:linear-gradient(#7e94a8,#2f465d);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.tl1{left:13px;transform:skew(-5deg)}.tl2{right:13px;transform:skew(5deg)}
+.tower-deck{position:absolute;left:0;width:96px;height:8px;background:linear-gradient(#8297aa,#31485d);box-shadow:0 1px 0 rgba(255,255,255,.15)}
+.d1{bottom:72px}.d2{bottom:160px}.d3{bottom:248px}
+.real-pad{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);width:310px;height:52px;border-radius:50%;background:
+ radial-gradient(ellipse,#536a78 0 32%,#1d303f 45%,#0a1823 68%,transparent 72%);box-shadow:0 14px 35px rgba(0,0,0,.4)}
+.pad-light{position:absolute;width:8px;height:8px;border-radius:50%;background:#ffd662;box-shadow:0 0 12px #ffd662;top:20px}.p1{left:40px}.p2{left:95px}.p3{right:95px}.p4{right:40px}
+.real-rocket-wrap{bottom:70px;width:150px;height:310px}
+.real-rocket{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:88px;height:236px;filter:drop-shadow(0 16px 15px rgba(0,0,0,.35))}
+.nose{position:absolute;left:50%;top:-49px;transform:translateX(-50%);width:86px;height:62px;background:linear-gradient(90deg,#cbd4db,#f8fbfd 48%,#9caab5);clip-path:polygon(50% 0,100% 100%,0 100%);border-radius:45% 45% 8px 8px}
+.rocket-body{position:absolute;inset:0;border-radius:42px 42px 24px 24px;background:linear-gradient(90deg,#aebbc5,#f8fbff 42%,#dbe3e8 66%,#8394a0);border:1px solid rgba(255,255,255,.6);box-shadow:inset -13px 0 22px rgba(0,0,0,.14)}
+.rocket-window{position:absolute;left:50%;top:42px;transform:translateX(-50%);width:37px;height:37px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#b9f7ff,#3fa7d7 38%,#103f68 72%);border:6px solid #394e5d;box-shadow:inset 0 0 10px rgba(255,255,255,.45)}
+.rocket-band{position:absolute;left:0;right:0;top:108px;height:22px;background:linear-gradient(#176fd1,#0f4f9a);box-shadow:0 1px 0 rgba(255,255,255,.18)}
+.rocket-mark{position:absolute;left:0;right:0;top:151px;text-align:center;color:#23425b;font-weight:900;font-size:11px;letter-spacing:2px}
+.fin{position:absolute;bottom:14px;width:43px;height:72px;background:linear-gradient(#1e72c7,#103e78);z-index:-1}
+.fin-l{left:-27px;clip-path:polygon(100% 0,100% 100%,0 100%)}.fin-r{right:-27px;clip-path:polygon(0 0,100% 100%,0 100%)}
+.engine{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);width:48px;height:24px;background:linear-gradient(#3d4d59,#161f27);clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)}
+.real-flame{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:48px;height:105px;opacity:.22;filter:blur(.7px)}
+.real-flame i,.real-flame b{position:absolute;left:50%;transform:translateX(-50%);clip-path:polygon(50% 100%,0 0,50% 13%,100% 0)}
+.real-flame i{top:0;width:48px;height:100%;background:linear-gradient(#fff,#ffe865 17%,#ff922b 46%,#f5472b 68%,transparent)}
+.real-flame b{top:4px;width:25px;height:75%;background:linear-gradient(#fff,#9bf4ff 36%,transparent)}
+.rocket-wrap.ready .real-flame{opacity:1;animation:realFlame .1s infinite alternate}@keyframes realFlame{to{height:123px;filter:blur(2px)}}
+.rocket-smoke{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);width:330px;height:95px;opacity:0}
+.rocket-smoke i{position:absolute;bottom:0;width:84px;height:56px;border-radius:50%;background:rgba(226,239,245,.78);filter:blur(5px)}
+.rocket-smoke i:nth-child(1){left:18px}.rocket-smoke i:nth-child(2){left:73px;bottom:10px}.rocket-smoke i:nth-child(3){left:128px}.rocket-smoke i:nth-child(4){left:185px;bottom:7px}.rocket-smoke i:nth-child(5){left:238px}
+.rocket-smoke.show{opacity:1;animation:smokeGrow 2.7s forwards}@keyframes smokeGrow{to{transform:translateX(-50%) scale(1.55);opacity:0}}
+@keyframes rocketLaunch{0%{transform:translateX(-50%) translateY(0)}12%{transform:translateX(-50%) translateY(5px)}25%{transform:translateX(-50%) translateY(-12px)}100%{transform:translateX(-50%) translateY(-900px)}}
+
+/* Vault realism */
+.vault-scene{background:
+ linear-gradient(90deg,rgba(12,18,25,.5),rgba(35,42,48,.12),rgba(12,18,25,.5)),
+ radial-gradient(circle at center,rgba(255,203,85,.08),transparent 45%)}
+.vault-room{position:absolute;inset:0;background:linear-gradient(180deg,#18222c 0,#0d151d 72%,#080d12 100%)}
+.vault-wall-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:62px 62px;mask-image:linear-gradient(#000,transparent 86%)}
+.security-light{position:absolute;top:55px;width:13px;height:13px;border-radius:50%;background:#ff374a;box-shadow:0 0 26px #ff374a}.sl1{left:13%}.sl2{right:13%}
+.realistic-vault{bottom:54px;width:360px;height:328px;border:18px solid #515b62;background:linear-gradient(145deg,#69757b,#283239);box-shadow:inset 0 0 0 4px #161d22,inset 0 0 42px rgba(0,0,0,.65),0 25px 70px rgba(0,0,0,.55)}
+.vault-frame-bolts i{position:absolute;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9e1e5,#6d777b 55%,#252d31)}
+.vault-frame-bolts i:nth-child(1){left:-14px;top:18px}.vault-frame-bolts i:nth-child(2){right:-14px;top:18px}.vault-frame-bolts i:nth-child(3){left:-14px;top:48%}.vault-frame-bolts i:nth-child(4){right:-14px;top:48%}.vault-frame-bolts i:nth-child(5){left:-14px;bottom:18px}.vault-frame-bolts i:nth-child(6){right:-14px;bottom:18px}.vault-frame-bolts i:nth-child(7){left:48%;top:-14px}.vault-frame-bolts i:nth-child(8){left:48%;bottom:-14px}
+.vault-door{inset:10px;border:5px solid #272f34;background:radial-gradient(circle at 45% 40%,#56636b,#27323a 62%,#161d22);box-shadow:inset -18px -15px 32px rgba(0,0,0,.4)}
+.vault-keypad{position:absolute;right:23px;top:32px;width:54px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.vault-keypad span{height:14px;border-radius:3px;background:#111a20;border:1px solid #6d7d86;box-shadow:inset 0 0 5px #000}
+.vault-status{position:absolute;right:20px;bottom:30px;padding:4px 7px;border-radius:4px;font-size:8px;letter-spacing:1px;color:#7cff9e;background:#07150d;border:1px solid #1d7240}
+.vault-inside{position:absolute;inset:28px;background:radial-gradient(circle at center,#7b5b11,#261c07 64%,#0b0802);border-radius:16px;overflow:hidden}
+.gold-bars{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:190px;display:flex;flex-wrap:wrap;justify-content:center;gap:5px}.gold-bars i{width:56px;height:27px;transform:skewX(-8deg);background:linear-gradient(145deg,#fff2a3,#d59c15 45%,#7c5405);border:1px solid #ffdf70;box-shadow:0 5px 8px rgba(0,0,0,.35)}
+.gold-glow{bottom:100px;z-index:0}
+
+/* Portal realism */
+.portal-scene{background:linear-gradient(180deg,#091526,#07101b 72%,#05090f)}
+.portal-room-floor{position:absolute;left:-10%;right:-10%;bottom:-160px;height:350px;transform:perspective(600px) rotateX(64deg);background:
+ linear-gradient(rgba(54,205,255,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(54,205,255,.11) 1px,transparent 1px),linear-gradient(#0a1b28,#061019);background-size:48px 48px}
+.portal-machine{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);width:520px;height:390px}
+.portal{left:50%;bottom:32px;width:320px;height:320px;background:none;box-shadow:none;animation:none}
+.portal-metal-ring{position:absolute;inset:0;border-radius:50%;border:30px solid #33434e;background:radial-gradient(circle,transparent 55%,rgba(158,183,198,.2) 56%,rgba(24,37,47,.8) 67%,transparent 68%);box-shadow:inset 0 0 0 5px #788a94,inset 0 0 35px #000,0 0 35px rgba(70,213,255,.18)}
+.portal-metal-ring:before{content:"";position:absolute;inset:-22px;border-radius:50%;border:4px dashed #6d7c84;animation:portalSpin 12s linear infinite}
+.portal-energy{position:absolute;inset:39px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 50%,#e7ffff 0 3%,#72e9ff 9%,#387bd8 26%,#5635b4 48%,#081d48 67%,#020817 74%);box-shadow:inset 0 0 35px #85f6ff,0 0 40px #4d95ff}
+.portal-energy i{position:absolute;inset:10%;border-radius:50%;border:4px solid transparent;border-top-color:rgba(212,255,255,.72);border-right-color:rgba(120,221,255,.35)}
+.portal-energy .e1{animation:portalSpin 1.8s linear infinite}.portal-energy .e2{inset:20%;animation:portalSpin 1.25s linear infinite reverse}.portal-energy .e3{inset:31%;animation:portalSpin .9s linear infinite}.portal-energy .e4{inset:41%;animation:portalSpin .65s linear infinite reverse}
+.portal-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:white;box-shadow:0 0 30px #fff,0 0 65px #7aeaff}
+.portal-stand{position:absolute;bottom:0;width:70px;height:150px;background:linear-gradient(90deg,#1a2833,#51626c,#17232c);clip-path:polygon(20% 0,80% 0,100% 100%,0 100%);box-shadow:0 12px 22px rgba(0,0,0,.4)}.portal-stand.left{left:28px}.portal-stand.right{right:28px}
+.portal-console{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);width:145px;height:48px;border-radius:9px 9px 3px 3px;background:linear-gradient(#384a57,#17242e);border:1px solid #708692;display:flex;align-items:center;justify-content:center;gap:10px}.portal-console span{width:12px;height:12px;border-radius:50%;background:#4cf29a;box-shadow:0 0 12px #4cf29a}.portal-console span:nth-child(2){background:#ffd45d;box-shadow:0 0 12px #ffd45d}.portal-console span:nth-child(3){background:#56cfff;box-shadow:0 0 12px #56cfff}.portal-console span:nth-child(4){background:#ff5d77;box-shadow:0 0 12px #ff5d77}
+.portal.flash .portal-energy{animation:portalBlast .75s ease}
+
+/* Mystery crates realism */
+.boxes-scene{background:linear-gradient(180deg,#171322,#0d0b12 74%,#08070a)}
+.warehouse-floor{position:absolute;left:-10%;right:-10%;bottom:-100px;height:310px;transform:perspective(600px) rotateX(63deg);background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(#221c28,#0d0b0e);background-size:65px 65px}
+.realistic-box-row{bottom:92px;gap:38px;perspective:900px}
+.crate{width:150px;height:132px;background:none!important;border:none;box-shadow:none;transform-style:preserve-3d}
+.crate-face{position:absolute;inset:21px 0 0;border-radius:10px;background:linear-gradient(135deg,#9f6235,#6d3e22 48%,#4b2816);border:5px solid #c28a55;box-shadow:inset 0 0 0 3px rgba(58,29,12,.55),0 20px 30px rgba(0,0,0,.4)}
+.crate-face:before,.crate-face:after{content:"";position:absolute;left:15px;right:15px;height:10px;background:#4f2c19;box-shadow:0 1px 0 rgba(255,255,255,.1)}.crate-face:before{top:20px;transform:rotate(31deg)}.crate-face:after{bottom:20px;transform:rotate(-31deg)}
+.crate-face span{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#17212a;border:3px solid #d4aa68;color:#ffe9b1;font-size:28px;font-weight:900;box-shadow:0 0 18px rgba(255,210,116,.16)}
+.crate-lid{position:absolute;left:-4px;right:-4px;top:7px;height:29px;border-radius:8px;background:linear-gradient(#bd8453,#6e4226);border:4px solid #d5a068;box-shadow:0 7px 9px rgba(0,0,0,.35);z-index:4;transform-origin:left bottom;transition:.5s}
+.crate-ribbon{position:absolute;left:50%;top:9px;bottom:0;width:18px;transform:translateX(-50%);background:linear-gradient(90deg,#b98b25,#f1d36a,#96711d);z-index:2;opacity:.95}
+.crate.selected .crate-lid{transform:rotateZ(-8deg) translateY(-22px) rotateX(38deg)}
+.crate.mix{animation:crateMix .3s ease-in-out infinite alternate}@keyframes crateMix{to{transform:translateY(-18px) rotateY(7deg)}}
+.crate.selected{animation:cratePop .65s cubic-bezier(.17,.89,.32,1.4) forwards}@keyframes cratePop{to{transform:scale(1.18) translateY(-25px);filter:brightness(1.18)}}
+.floor-reflection{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);width:600px;height:70px;border-radius:50%;background:radial-gradient(ellipse,rgba(252,190,116,.10),transparent 68%);filter:blur(9px)}
+
+/* Arena realism */
+.arena-scene{background:linear-gradient(180deg,#07101d,#09101a 65%,#05080d)}
+.stadium-back{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(29,85,126,.22),transparent 47%)}
+.crowd{position:absolute;left:5%;right:5%;height:72px;opacity:.35;background-image:radial-gradient(circle,#7fa2bc 0 2px,transparent 2.3px);background-size:14px 12px}.c-row1{top:80px}.c-row2{top:148px;opacity:.22}
+.stadium-light{position:absolute;top:36px;width:58px;height:22px;border-radius:4px;background:repeating-linear-gradient(90deg,#fff 0 5px,#b9d7e7 5px 9px);box-shadow:0 0 28px white}.l1{left:12%}.l2{left:32%}.l3{right:32%}.l4{right:12%}
+.arena-floor{bottom:-115px;width:850px;height:360px;background:radial-gradient(ellipse,#294b61 0 29%,#132c3e 50%,#07131f 69%,transparent 71%);border:2px solid rgba(127,214,255,.12);box-shadow:inset 0 20px 50px rgba(70,176,230,.08)}
+.spotlight{bottom:112px;height:460px;width:180px;opacity:.22}
+.winner-podium{position:absolute;left:50%;bottom:65px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:8px}
+.podium-step{width:105px;border-radius:7px 7px 0 0;display:grid;place-items:center;font-size:32px;font-weight:1000;color:#dce9f2;background:linear-gradient(90deg,#324757,#667c89,#253843);border:1px solid #8ca1ad;box-shadow:0 15px 25px rgba(0,0,0,.4)}.podium-step.first{height:118px;color:#ffe590}.podium-step.second{height:80px}.podium-step.third{height:63px}
+.arena-cup{position:absolute;left:50%;bottom:188px;transform:translateX(-50%);width:120px;height:145px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.45))}
+.cup-bowl{position:absolute;left:19px;top:0;width:82px;height:72px;background:linear-gradient(90deg,#9b6a0d,#ffdf62 43%,#fff2a2 58%,#b77808);clip-path:polygon(0 0,100% 0,82% 76%,65% 100%,35% 100%,18% 76%);z-index:2}
+.cup-stem{position:absolute;left:52px;top:66px;width:17px;height:47px;background:linear-gradient(90deg,#9b6a0d,#ffd75a,#9b6a0d)}.cup-base{position:absolute;left:27px;bottom:0;width:67px;height:22px;border-radius:6px;background:linear-gradient(#f2c449,#8f5d09)}
+.cup-handle{position:absolute;top:13px;width:39px;height:49px;border:9px solid #d89e24;border-radius:50%;z-index:1}.cup-handle.hl{left:0}.cup-handle.hr{right:0}
+
+/* Scene entrance */
+.stage-visual.active .realistic-vault,.stage-visual.active .portal-machine,.stage-visual.active .realistic-box-row,.stage-visual.active .winner-podium,.stage-visual.active .real-rocket-wrap{
+  animation:sceneEnter .42s cubic-bezier(.2,.8,.25,1)
+}
+@keyframes sceneEnter{from{opacity:0;transform:translateX(-50%) translateY(18px) scale(.96)}to{opacity:1}}
+@media(max-width:900px){
+ .stage{padding-bottom:146px}
+ .control-center{bottom:8px;width:96%;grid-template-columns:1fr;grid-template-rows:auto auto auto;text-align:center}
+ .control-center .caption,.name-screen,.start-btn{grid-column:1}
+ .control-center .caption{grid-row:1;text-align:center}.name-screen{grid-row:2;justify-items:center;font-size:22px}.start-btn{grid-row:3;height:48px}
+ .active-game-banner{margin-inline:10px}.active-game-banner small{display:none}
+ .realistic-box-row{gap:12px}.crate{width:95px;height:91px}.crate-face{top:16px}.crate-lid{height:22px}.crate-face span{width:34px;height:34px;font-size:21px}
+ .portal-machine{transform:translateX(-50%) scale(.78);transform-origin:bottom center}.realistic-vault{transform:translateX(-50%) scale(.82);transform-origin:bottom center}
+}
+
+
+/* ===== V4: show selected name inside each game + docked encouragement ===== */
+.stage-confetti{z-index:82;pointer-events:none}
+.result-dock{
+  position:absolute;left:50%;bottom:112px;transform:translateX(-50%);
+  width:min(820px,92%);display:none;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;border-radius:18px;background:rgba(5,19,42,.88);
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 35px rgba(0,0,0,.35);z-index:84
+}
+.result-dock.show{display:flex;animation:fadeUp .28s ease}
+.result-dock-text{display:flex;flex-direction:column;gap:3px}
+.dock-winner-name{font-size:24px;font-weight:1000;color:#fff}
+.dock-phrase{font-size:14px;color:#cde7ff}
+.result-dock-actions{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes fadeUp{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.rocket-name-tag,.vault-name-tag,.portal-name-tag,.crate-name-tag,.arena-name-tag{
+  opacity:0;transition:.25s ease;pointer-events:none
+}
+.rocket-name-tag.show,.vault-name-tag.show,.portal-name-tag.show,.crate-name-tag.show,.arena-name-tag.show{opacity:1}
+
+.rocket-name-tag{
+  position:absolute;left:50%;top:141px;transform:translateX(-50%);min-width:66px;max-width:74px;
+  padding:4px 6px;border-radius:9px;background:rgba(5,24,44,.92);color:#ffffff;
+  font-size:9px;font-weight:800;line-height:1.2;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3)
+}
+.vault-name-tag{
+  position:absolute;left:50%;top:28px;transform:translateX(-50%);min-width:170px;max-width:200px;
+  padding:12px 10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,241,164,.95),rgba(214,170,37,.95));
+  color:#3c2a00;font-size:20px;font-weight:1000;text-align:center;box-shadow:0 8px 18px rgba(0,0,0,.28)
+}
+.portal-name-tag{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:160px;max-width:190px;
+  padding:14px 12px;border-radius:999px;background:rgba(255,255,255,.92);color:#08315e;
+  font-size:20px;font-weight:1000;text-align:center;box-shadow:0 0 26px rgba(255,255,255,.55),0 0 70px rgba(116,233,255,.28)
+}
+.crate-name-tag{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:82%;padding:6px 5px;
+  border-radius:10px;background:rgba(255,250,232,.95);color:#502d16;font-size:14px;font-weight:900;
+  text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.22)
+}
+.arena-name-tag{
+  position:absolute;left:50%;bottom:130px;transform:translateX(-50%);min-width:170px;max-width:220px;
+  padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(255,236,148,.96),rgba(220,174,39,.96));
+  color:#3d2800;font-size:24px;font-weight:1000;text-align:center;box-shadow:0 10px 22px rgba(0,0,0,.3)
+}
+.crate-face{overflow:hidden}
+.crate-face span{z-index:2}
+.crate-name-tag.show + span{}
+.real-rocket-wrap.go{animation:rocketLaunch 2.8s cubic-bezier(.44,.05,.2,.99) forwards}
+@keyframes rocketLaunch{
+  0%{transform:translateX(-50%) translateY(0)}
+  10%{transform:translateX(-50%) translateY(4px)}
+  22%{transform:translateX(-50%) translateY(-14px)}
+  100%{transform:translateX(-50%) translateY(-420px)}
+}
+@media(max-width:900px){
+  .result-dock{bottom:126px;flex-direction:column;align-items:stretch;padding:10px 12px}
+  .dock-winner-name{text-align:center;font-size:20px}
+  .dock-phrase{text-align:center}
+  .result-dock-actions{justify-content:center}
+  .vault-name-tag{min-width:120px;max-width:150px;font-size:14px;padding:8px 6px}
+  .portal-name-tag{min-width:120px;max-width:140px;font-size:14px;padding:9px 8px}
+  .arena-name-tag{min-width:120px;max-width:150px;font-size:15px;bottom:105px}
+  .rocket-name-tag{top:137px;font-size:7px;max-width:60px}
+  .crate-name-tag{font-size:11px}
+}
+
+
+/* ===== V5: larger game canvas + compact top selector ===== */
+.game-strip{
+  gap:6px!important;
+  padding:2px 14px 5px!important;
+  min-height:56px;
+}
+.game-card{
+  min-width:108px!important;
+  padding:6px 8px!important;
+  border-radius:13px!important;
+  display:grid;
+  grid-template-columns:24px 1fr;
+  grid-template-rows:1fr;
+  align-items:center;
+  column-gap:6px;
+  text-align:right;
+}
+.game-card .ico{
+  font-size:18px!important;
+  line-height:1;
+  grid-column:1;
+}
+.game-card b{
+  font-size:11px!important;
+  margin:0!important;
+  line-height:1.25;
+  grid-column:2;
+}
+.game-card small{display:none!important}
+.active-game-banner{
+  min-height:27px;
+  padding:4px 10px!important;
+  margin:0 14px 4px!important;
+  border-radius:9px!important;
+}
+.active-game-banner b{font-size:11px!important}
+.active-game-banner small{font-size:9px!important}
+.pulse-dot{width:6px!important;height:6px!important}
+
+.stage{
+  padding-bottom:108px!important;
+}
+.control-center{
+  bottom:8px!important;
+  min-height:82px!important;
+  padding:9px 12px!important;
+  width:min(900px,95%)!important;
+  grid-template-columns:1fr minmax(260px,390px)!important;
+}
+.control-center .caption{font-size:11px!important}
+.name-screen{
+  height:38px!important;
+  font-size:29px!important;
+}
+.start-btn{
+  height:56px!important;
+  font-size:17px!important;
+}
+
+/* Enlarge actual game objects */
+.real-rocket-wrap{
+  bottom:52px!important;
+  transform:translateX(-50%) scale(1.22);
+  transform-origin:bottom center;
+}
+.launch-tower{
+  transform:scale(1.10);
+  transform-origin:bottom center;
+  left:calc(50% + 132px)!important;
+}
+.real-pad{
+  width:370px!important;
+  height:62px!important;
+  bottom:42px!important;
+}
+.earth-horizon{bottom:-285px!important}
+
+.realistic-vault{
+  bottom:35px!important;
+  transform:translateX(-50%) scale(1.18);
+  transform-origin:bottom center;
+}
+.portal-machine{
+  bottom:18px!important;
+  transform:translateX(-50%) scale(1.17);
+  transform-origin:bottom center;
+}
+.realistic-box-row{
+  bottom:66px!important;
+  gap:48px!important;
+  transform:translateX(-50%) scale(1.18);
+  transform-origin:bottom center;
+}
+.crate{
+  width:164px!important;
+  height:144px!important;
+}
+.winner-podium{
+  bottom:42px!important;
+  transform:translateX(-50%) scale(1.16);
+  transform-origin:bottom center;
+}
+.arena-cup{
+  bottom:182px!important;
+  transform:translateX(-50%) scale(1.13);
+}
+.arena-floor{
+  width:930px!important;
+  height:390px!important;
+  bottom:-120px!important;
+}
+
+/* Make winner name more prominent inside each game */
+.rocket-name-tag{
+  top:136px!important;
+  min-width:78px!important;
+  max-width:82px!important;
+  padding:5px 5px!important;
+  font-size:10px!important;
+}
+.vault-name-tag{
+  min-width:190px!important;
+  max-width:230px!important;
+  padding:14px 12px!important;
+  font-size:23px!important;
+}
+.portal-name-tag{
+  min-width:185px!important;
+  max-width:225px!important;
+  padding:16px 14px!important;
+  font-size:23px!important;
+}
+.crate-name-tag{
+  width:88%!important;
+  padding:8px 6px!important;
+  font-size:16px!important;
+}
+.arena-name-tag{
+  min-width:205px!important;
+  max-width:250px!important;
+  padding:12px 14px!important;
+  font-size:27px!important;
+}
+
+/* Keep encouragement below game without stealing canvas */
+.result-dock{
+  bottom:92px!important;
+  width:min(900px,95%)!important;
+  padding:9px 12px!important;
+}
+.dock-winner-name{font-size:21px!important}
+.dock-phrase{font-size:13px!important}
+.result-dock .btn{padding:8px 11px!important}
+
+/* Preserve launch animation while using enlarged scale */
+.real-rocket-wrap.go{
+  animation:rocketLaunchV5 2.8s cubic-bezier(.44,.05,.2,.99) forwards!important;
+}
+@keyframes rocketLaunchV5{
+  0%{transform:translateX(-50%) translateY(0) scale(1.22)}
+  10%{transform:translateX(-50%) translateY(4px) scale(1.22)}
+  22%{transform:translateX(-50%) translateY(-16px) scale(1.22)}
+  100%{transform:translateX(-50%) translateY(-500px) scale(1.22)}
+}
+
+@media(max-width:900px){
+  .game-strip{min-height:50px!important}
+  .game-card{min-width:94px!important;padding:5px 6px!important;grid-template-columns:20px 1fr}
+  .game-card .ico{font-size:16px!important}
+  .game-card b{font-size:10px!important}
+  .active-game-banner small{display:none!important}
+  .stage{padding-bottom:138px!important}
+  .control-center{
+    bottom:6px!important;
+    grid-template-columns:1fr!important;
+    grid-template-rows:auto auto auto!important;
+  }
+  .name-screen{font-size:23px!important}
+  .real-rocket-wrap{transform:translateX(-50%) scale(.95)!important}
+  .realistic-vault{transform:translateX(-50%) scale(.98)!important}
+  .portal-machine{transform:translateX(-50%) scale(.90)!important}
+  .realistic-box-row{transform:translateX(-50%) scale(.92)!important;gap:16px!important}
+  .winner-podium{transform:translateX(-50%) scale(.96)!important}
+  .arena-cup{transform:translateX(-50%) scale(.96)!important}
+  .result-dock{bottom:126px!important}
+  @keyframes rocketLaunchV5{
+    0%{transform:translateX(-50%) translateY(0) scale(.95)}
+    22%{transform:translateX(-50%) translateY(-12px) scale(.95)}
+    100%{transform:translateX(-50%) translateY(-390px) scale(.95)}
+  }
+}
+
+
+/* ===== V6: class/section selector ===== */
+.class-selector-bar{
+  margin:0 14px 6px;
+  padding:7px 10px;
+  display:grid;
+  grid-template-columns:auto minmax(170px,280px) 1fr;
+  align-items:center;
+  gap:9px;
+  border-radius:13px;
+  background:linear-gradient(90deg,rgba(69,223,255,.08),rgba(255,255,255,.035));
+  border:1px solid rgba(69,223,255,.15);
+}
+.class-selector-title{font-size:11px;font-weight:900;color:#dff8ff}
+.class-select{
+  min-height:38px;
+  padding:7px 11px;
+  background:#071a36;
+  border:1px solid rgba(99,233,255,.30);
+  color:#fff;
+  font-weight:900;
+  border-radius:11px;
+  cursor:pointer;
+}
+.class-student-count{
+  justify-self:start;
+  color:var(--muted);
+  font-size:11px;
+  padding:6px 9px;
+  border-radius:99px;
+  background:rgba(255,255,255,.04);
+}
+.classes-admin-head{
+  display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px
+}
+.classes-config{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.class-admin-card{
+  padding:13px;border-radius:18px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.09)
+}
+.class-admin-card-head{display:flex;gap:8px;align-items:center;margin-bottom:9px}
+.class-admin-card-head input{font-weight:900}
+.class-admin-card textarea{min-height:180px!important}
+.class-count-badge{
+  display:inline-flex;margin-top:7px;padding:5px 8px;border-radius:99px;
+  background:rgba(69,223,255,.08);border:1px solid rgba(69,223,255,.13);
+  color:#bfefff;font-size:10px
+}
+@media(max-width:900px){
+  .class-selector-bar{grid-template-columns:1fr 1fr;margin-inline:10px}
+  .class-selector-title{display:none}
+  .class-student-count{justify-self:end}
+  .classes-config{grid-template-columns:1fr}
+}
+
+
+/* ===== V7: Elegant "Tafsir Wheel" inspired spinning wheel ===== */
+.wheel-scene{
+  background:
+    radial-gradient(circle at 50% 43%,rgba(245,229,185,.16),transparent 34%),
+    linear-gradient(180deg,#0b2632 0%,#0b3340 38%,#081d29 100%);
+  overflow:hidden;
+}
+.wheel-scene::before{
+  content:"";position:absolute;inset:0;opacity:.10;
+  background-image:
+    linear-gradient(30deg,transparent 24%,rgba(255,255,255,.18) 25%,rgba(255,255,255,.18) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.18) 75%,rgba(255,255,255,.18) 76%,transparent 77%),
+    linear-gradient(150deg,transparent 24%,rgba(255,255,255,.18) 25%,rgba(255,255,255,.18) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.18) 75%,rgba(255,255,255,.18) 76%,transparent 77%);
+  background-size:54px 92px;
+}
+.wheel-islamic-bg{position:absolute;inset:0;pointer-events:none}
+.geo{position:absolute;width:120px;height:120px;border:2px solid rgba(224,190,99,.14);transform:rotate(45deg);border-radius:16px}
+.geo::before,.geo::after{content:"";position:absolute;inset:19px;border:1px solid rgba(224,190,99,.12);border-radius:12px}
+.geo::after{inset:38px}
+.g1{left:5%;top:16%}.g2{right:5%;top:16%}.g3{left:9%;bottom:15%}.g4{right:9%;bottom:15%}
+.wheel-arch{
+  position:absolute;top:8%;width:210px;height:360px;border:2px solid rgba(229,194,101,.18);
+  border-bottom:0;border-radius:110px 110px 0 0;opacity:.6
+}
+.arch-left{left:3%}.arch-right{right:3%}
+.wheel-lantern{position:absolute;top:17%;width:44px;height:86px;filter:drop-shadow(0 0 14px rgba(255,216,109,.24))}
+.wheel-lantern::before{content:"";position:absolute;left:20px;top:-55px;width:3px;height:58px;background:linear-gradient(#d8b259,#6d5521)}
+.wheel-lantern::after{content:"";position:absolute;left:4px;right:4px;top:8px;bottom:8px;border-radius:8px 8px 16px 16px;background:linear-gradient(135deg,#f4dc91,#a87420 48%,#5b3f12);border:2px solid #f0cf75;box-shadow:inset 0 0 20px rgba(255,240,160,.5)}
+.wheel-lantern i{position:absolute;z-index:2;left:13px;top:25px;width:18px;height:30px;border-radius:50%;background:#fff2a8;box-shadow:0 0 22px #ffe77a}
+.lantern-left{left:11%}.lantern-right{right:11%}
+.wheel-stage{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-53%);
+  width:min(66vh,590px);height:min(66vh,590px);z-index:3;
+}
+.student-wheel{
+  position:absolute;inset:0;width:100%;height:100%;border-radius:50%;
+  filter:drop-shadow(0 25px 35px rgba(0,0,0,.42));
+}
+.wheel-halo{
+  position:absolute;inset:-18px;border-radius:50%;
+  border:2px solid rgba(234,200,113,.55);
+  box-shadow:0 0 0 7px rgba(18,75,75,.55),0 0 0 10px rgba(234,200,113,.20),0 0 55px rgba(255,215,100,.17);
+}
+.wheel-halo::before,.wheel-halo::after{
+  content:"";position:absolute;inset:11px;border-radius:50%;border:1px dashed rgba(255,236,178,.34)
+}
+.wheel-halo::after{inset:-11px;border-style:solid;border-color:rgba(255,255,255,.06)}
+.wheel-pointer{
+  position:absolute;z-index:9;left:50%;top:-35px;transform:translateX(-50%);
+  width:58px;height:78px;filter:drop-shadow(0 9px 8px rgba(0,0,0,.36))
+}
+.wheel-pointer::before{
+  content:"";position:absolute;left:50%;top:22px;transform:translateX(-50%);
+  width:52px;height:58px;background:linear-gradient(135deg,#fff2b8,#d2a43c 45%,#876016);
+  clip-path:polygon(50% 100%,0 0,100% 0);border-radius:8px
+}
+.pointer-gem{
+  position:absolute;z-index:2;left:50%;top:0;transform:translateX(-50%);
+  width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dffff4,#2db89b 42%,#075d58 72%);
+  border:5px solid #e4bd5e;box-shadow:0 0 20px rgba(67,219,180,.28)
+}
+.wheel-center{
+  position:absolute;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:25%;height:25%;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 30%,#f8efd5,#d6ae52 42%,#8a611c 68%,#3d2c0e 100%);
+  border:7px solid #f5d77f;box-shadow:0 9px 25px rgba(0,0,0,.38),inset 0 0 0 4px rgba(90,58,11,.5)
+}
+.wheel-center-ring{position:absolute;inset:10px;border-radius:50%;border:2px solid rgba(76,48,9,.55)}
+.wheel-center-title{text-align:center;color:#173b3a;font-size:clamp(12px,2.2vh,18px);font-weight:1000;line-height:1.2;text-shadow:0 1px rgba(255,255,255,.45)}
+.wheel-crown{
+  position:absolute;z-index:8;left:50%;top:-62px;transform:translateX(-50%);
+  font-size:30px;color:#ffdc75;text-shadow:0 0 16px rgba(255,219,106,.5)
+}
+.wheel-winner-plate{
+  position:absolute;z-index:10;left:50%;bottom:-52px;transform:translateX(-50%) translateY(12px);
+  min-width:230px;max-width:82%;padding:10px 20px;border-radius:999px;
+  background:linear-gradient(180deg,#f8f0d5,#e2bd66);color:#163d3a;text-align:center;
+  font-weight:1000;font-size:18px;border:3px solid #fff0b6;box-shadow:0 12px 24px rgba(0,0,0,.30);
+  opacity:0;transition:.3s ease
+}
+.wheel-winner-plate.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.wheel-bottom-ornament{
+  position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:2;
+  width:min(520px,70%);display:flex;align-items:center;justify-content:center;gap:12px;color:#e9ca76;font-size:11px;letter-spacing:.5px
+}
+.wheel-bottom-ornament span{height:1px;flex:1;background:linear-gradient(90deg,transparent,#d7b660,transparent)}
+.wheel-scene.spinning .wheel-halo{animation:wheelHaloPulse .55s ease-in-out infinite alternate}
+@keyframes wheelHaloPulse{to{box-shadow:0 0 0 7px rgba(18,75,75,.55),0 0 0 10px rgba(234,200,113,.28),0 0 85px rgba(255,215,100,.32)}}
+.wheel-scene.wheel-win .wheel-winner-plate{animation:wheelPlatePop .55s cubic-bezier(.17,.89,.32,1.4)}
+@keyframes wheelPlatePop{from{transform:translateX(-50%) scale(.6);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+@media(max-width:900px){
+  .wheel-stage{width:min(57vh,390px);height:min(57vh,390px);transform:translate(-50%,-54%)}
+  .wheel-lantern,.wheel-arch{display:none}
+  .wheel-winner-plate{bottom:-45px;min-width:180px;font-size:14px}
+  .wheel-bottom-ornament{bottom:12px;width:76%}
+}
+
+
+/* ===== V8 Final UX ===== */
+.teacher-emphasis{font-size:15px!important;font-weight:1000!important;color:#fff!important;margin-top:7px!important}
+.teacher-top-emphasis{font-size:15px;font-weight:1000;color:#fff}
+.last-pick-side{
+  margin-top:8px!important;padding:6px 8px;border-radius:10px;
+  background:rgba(69,223,255,.06);border:1px solid rgba(69,223,255,.12);
+  color:#d8f7ff!important;font-size:11px!important
+}
+.attendance-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}
+.attendance-list{max-height:52vh;overflow:auto;display:grid;gap:6px}
+.attendance-row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)
+}
+.attendance-row.absent{background:rgba(255,99,118,.07);border-color:rgba(255,99,118,.20)}
+.attendance-row label{display:flex;align-items:center;gap:7px;cursor:pointer}
+.attendance-row input{width:auto}
+.history-stats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.history-stat{padding:7px 10px;border-radius:99px;background:rgba(69,223,255,.07);border:1px solid rgba(69,223,255,.12);font-size:11px}
+.history-list{max-height:52vh;overflow:auto;display:grid;gap:6px}
+.history-item{
+  display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:9px 11px;
+  border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)
+}
+.history-num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,212,93,.10);color:#ffe288;font-weight:900}
+.history-item b{display:block}.history-item small{color:var(--muted)}
+.name-chip{position:relative}
+.name-chip.absent{opacity:.52;text-decoration:none}
+.name-chip.absent::after{
+  content:"غائبة";margin-right:auto;padding:2px 6px;border-radius:99px;font-size:9px;
+  color:#ffd5da;background:rgba(255,91,112,.13);border:1px solid rgba(255,91,112,.20)
+}
+.rocket-name-tag{
+  top:127px!important;min-width:102px!important;max-width:116px!important;padding:7px 7px!important;
+  font-size:11px!important;border:2px solid rgba(99,233,255,.55)!important;
+  background:linear-gradient(180deg,rgba(6,35,58,.96),rgba(4,18,34,.96))!important;
+  box-shadow:0 0 18px rgba(69,223,255,.24),0 5px 12px rgba(0,0,0,.35)!important
+}
+.crate.selected .crate-name-tag{
+  top:20%!important;transform:translate(-50%,-50%) translateY(-38px)!important;
+  width:94%!important;font-size:17px!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.34),0 0 20px rgba(255,222,140,.18)!important
+}
+.crate.selected .crate-face span{opacity:0}
+.wheel-center.winner-mode{
+  background:radial-gradient(circle at 38% 30%,#fff8dc,#f2ce72 44%,#a37122 70%,#49310c 100%)
+}
+.wheel-center.winner-mode .wheel-center-title{font-size:13px;max-width:82%;word-break:break-word}
+.stats{grid-template-columns:repeat(4,1fr)!important}
+.stat.absent-stat b{color:#ff9aaa}
+@media(max-width:900px){
+  .teacher-top-emphasis{font-size:13px}
+  .history-item{grid-template-columns:36px 1fr}
+  .history-item>small{grid-column:2}
+}
+
+
+/* ===== V10: fix selected-name position for boxes and arena ===== */
+.crate{overflow:visible!important}
+.crate-face{overflow:visible!important}
+.crate-name-tag{
+  z-index:12!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+}
+.crate.selected .crate-name-tag{
+  top:-18px!important;
+  transform:translate(-50%,-100%)!important;
+  width:125px!important;
+  max-width:125px!important;
+  min-height:42px!important;
+  padding:9px 10px!important;
+  border-radius:14px!important;
+  font-size:16px!important;
+  line-height:1.25!important;
+  font-weight:1000!important;
+  background:linear-gradient(180deg,rgba(255,248,226,.98),rgba(248,220,152,.98))!important;
+  color:#4b2813!important;
+  border:2px solid rgba(255,217,120,.95)!important;
+  box-shadow:0 10px 22px rgba(0,0,0,.34),0 0 22px rgba(255,216,126,.26)!important;
+}
+.crate.selected .crate-face{
+  filter:brightness(1.05);
+}
+.arena-name-tag{
+  z-index:15!important;
+  left:50%!important;
+  bottom:205px!important;
+  transform:translateX(-50%)!important;
+  min-width:250px!important;
+  max-width:330px!important;
+  padding:12px 16px!important;
+  border-radius:16px!important;
+  font-size:30px!important;
+  line-height:1.2!important;
+  font-weight:1000!important;
+  background:linear-gradient(180deg,rgba(255,243,176,.98),rgba(228,182,49,.98))!important;
+  color:#3d2800!important;
+  border:2px solid rgba(255,240,183,.95)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.34),0 0 24px rgba(255,219,103,.18)!important;
+}
+.winner-podium{overflow:visible!important}
+@media(max-width:900px){
+  .crate.selected .crate-name-tag{
+    top:-14px!important;
+    width:96px!important;
+    max-width:96px!important;
+    min-height:34px!important;
+    padding:7px 8px!important;
+    font-size:12px!important;
+  }
+  .arena-name-tag{
+    bottom:168px!important;
+    min-width:165px!important;
+    max-width:210px!important;
+    padding:9px 12px!important;
+    font-size:18px!important;
+  }
+}
+
+
+/* ===== V11: arena winner name is a separate floating layer ===== */
+.arena-floating-name{
+  position:absolute!important;
+  left:50%!important;
+  top:118px!important;
+  bottom:auto!important;
+  transform:translateX(-50%)!important;
+  z-index:60!important;
+  min-width:330px!important;
+  max-width:520px!important;
+  padding:14px 24px!important;
+  border-radius:18px!important;
+  font-size:32px!important;
+  line-height:1.25!important;
+  font-weight:1000!important;
+  text-align:center!important;
+  background:linear-gradient(180deg,#fff1aa 0%,#e4b631 72%,#b47b08 100%)!important;
+  color:#352300!important;
+  border:3px solid rgba(255,244,190,.98)!important;
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.38),
+    0 0 28px rgba(255,220,103,.30),
+    inset 0 2px 0 rgba(255,255,255,.65)!important;
+}
+.arena-cup{z-index:20!important}
+.winner-podium{z-index:10!important}
+.spotlight{z-index:4!important}
+@media(max-width:900px){
+  .arena-floating-name{
+    top:84px!important;
+    min-width:220px!important;
+    max-width:86%!important;
+    padding:10px 14px!important;
+    font-size:21px!important;
+  }
+}
+
+
+/* ===== V12: make mystery-box winner name centered like Arena ===== */
+.boxes-center-name{
+  position:absolute;
+  left:50%;
+  top:112px;
+  transform:translateX(-50%);
+  z-index:60;
+  min-width:330px;
+  max-width:520px;
+  padding:14px 24px;
+  border-radius:18px;
+  text-align:center;
+  font-size:32px;
+  line-height:1.25;
+  font-weight:1000;
+  color:#352300;
+  background:linear-gradient(180deg,#fff1aa 0%,#e4b631 72%,#b47b08 100%);
+  border:3px solid rgba(255,244,190,.98);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.38),
+    0 0 28px rgba(255,220,103,.30),
+    inset 0 2px 0 rgba(255,255,255,.65);
+  opacity:0;
+  transition:.25s ease;
+}
+.boxes-center-name.show{opacity:1}
+.crate.selected .crate-name-tag{display:none!important}
+@media(max-width:900px){
+  .boxes-center-name{
+    top:84px;
+    min-width:220px;
+    max-width:86%;
+    padding:10px 14px;
+    font-size:21px;
+  }
+}
+
+
+/* ===== V13: make rocket winner name centered like arena/boxes ===== */
+.rocket-center-name{
+  position:absolute;
+  left:50%;
+  top:145px;
+  transform:translateX(-50%);
+  z-index:60;
+  min-width:330px;
+  max-width:520px;
+  padding:14px 24px;
+  border-radius:18px;
+  text-align:center;
+  font-size:32px;
+  line-height:1.25;
+  font-weight:1000;
+  color:#352300;
+  background:linear-gradient(180deg,#fff1aa 0%,#e4b631 72%,#b47b08 100%);
+  border:3px solid rgba(255,244,190,.98);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.38),
+    0 0 28px rgba(255,220,103,.30),
+    inset 0 2px 0 rgba(255,255,255,.65);
+  opacity:0;
+  transition:.25s ease;
+}
+.rocket-center-name.show{opacity:1}
+.rocket-name-tag{display:none!important}
+@media(max-width:900px){
+  .rocket-center-name{
+    top:105px;
+    min-width:220px;
+    max-width:86%;
+    padding:10px 14px;
+    font-size:21px;
+  }
+}
+
+</style>
+<script>window.__BUILD_MODE__="play";window.__EXPORTED_CONFIG__={"title":"مَنْ بَطَلَةُ التَّحَدِّي؟","school":"مدرسة الفلاح الابتدائية للبنات","teacher":"المعلمة / خلود الشمري","readyText":"جاهزات للتحدّي؟","playPinHash":"","exportId":"export-1793905568387-l4sxr197rb","noRepeat":true,"allowRandomMode":true,"accent":"#45dfff","bg":"#07152d","stars":true,"effectsDefault":true,"phrases":["أَنْتِ نَجْمَةُ هَذِهِ الْجَوْلَةِ!","اسْتَعِدِّي لِتُبْدِعِي فِي التَّحَدِّي!","دَوْرُكِ لِتُظْهِرِي تَمَيُّزَكِ!","يَا بَطَلَةَ الْفَلَاحِ، انْطَلِقِي بِثِقَةٍ!","نَحْنُ مُتَحَمِّسَاتٌ لِمُشَارَكَتِكِ!","اجْعَلِي هَذِهِ الْجَوْلَةَ مُشْرِقَةً بِأَفْكَارِكِ!"],"games":{"rocket":{"enabled":true,"name":"صاروخ البطلات","start":"🚀 إِطْلَاقُ الْمُهِمَّةِ"},"vault":{"enabled":true,"name":"الخزنة الذهبية","start":"🔐 فَتْحُ الْخَزْنَةِ"},"portal":{"enabled":true,"name":"البوابة الكونية","start":"✨ فَتْحُ الْبَوَّابَةِ"},"boxes":{"enabled":true,"name":"صناديق المفاجآت","start":"🎁 اِكْشِفِي الْمُفَاجَأَةَ"},"arena":{"enabled":true,"name":"ساحة البطلات","start":"⚡ اِبْدَئِي التَّحَدِّي"},"wheel":{"enabled":true,"name":"عجلة البطلات","start":"🎡 أَدِيرِي الْعَجَلَةَ"}},"classes":[{"id":"falah-grade3-1","name":"الصف الثالث (أ)","students":["اسماء اسم خان","الاء ابراهيم جامع","الجازي صلاح حسن","الدانه محمد السليطى","الين طقاطقه","أميره عبدالمجيد","آية ثائر سلطان","ايفا ابراهيم خالد","ايفا اياد عطاالله صالح","تالا عبدالله ابوعيشه","تولين ثائر يعقوب رحال","جوان محمد سامي","دانه محمد علي نصرالله","ديالا عبدالمعين سمير","رزان علي محمد عثمان","رغد محمد فضيل بني","رند احمد ناصر","ريماس يوسف الخالد","زينب طور","شهد نور احمد","شيخه سليمان القحطانى","عالية خالد","عائشة خليل","فردوس رضا محمد","لمى عمر حسن الكوز","مريم عبدالجبار هادي","منيرة على سالم ال مسعود","ميس مرتضى عبدالله","ميمونة عبدالخالق","نجوى سيف","نورة عيسى عبدالله علي","نوره عبدالله منصور عيد","وتين حمزة محجوب محمد"]},{"id":"falah-grade3-2","name":"الصف الثالث (ب)","students":["اسيا احمد","العنود خليف الهنيدي","العنود عبد العزيز صالح","اميره حاجى مرادي تختى","ايمان فيصل محمد البدر","تقي محمد احمد الفضل","جوان والدائم عثمان","حبيبه احمد","دانا حسان احمد الهندي","رقيه احمد رنج برى زاده","رقيه عبد الله محمد","رند وجلبان","روز خالد بشتاوي","ريم دخيل مسلم المرى","ريم سامح عبد الصابر","زينه محمد معتصم","زينه هيثم محمود عقل","سلوى احمد النصر","سما مأمون عبد الرحمن","سوار مصطفي بشير","شهد بلال حسين البزور","شيخة حمد عجيان حمد","علياء ياسين الهواري","غنى اسامه المحمد","كادي عثمان الحسين","كرما عاصم عبد الوهاب","لين محمد اسماعيل","مريم وليد جوده عبدربه","منة الله محمد فرج","منى هشام ابراهيم عوض","ناديه كدا دووست","نهى شاذلي نادر خوجلي","هيا عبد الله صالح"]},{"id":"falah-grade3-3","name":"الصف الثالث (ج)","students":["المى ابراهيم احمد","ايسل محمد","ايلين ابرهيم احمد ا","بخيته عبدالله محمد","تالا محمد شاكر جبر","جميله محمود عبدالله","جويرية احمد","حفصه شيراز حسن","خديجه احمد خالد","رغد خليل شنبدى","رنيم بوجلبان","روزه محمد سعيد","روميسه احمد علي","سلوى عبدالله اسماعيل عبدالله الشرشنى","سنا عيسى حمد النصف","شوق خالد مطهر علي","شيخه نويصر","غلا احمد باسم ملاح","فاطمه صلاح رحمتى","كوثر احمد باقري زاده","لارا عمار خضر دراغمة","لولوة سالم شعبان سالم","مرافئ يسرى ياسر","مريم حسام سيد احمد","مزنه على حمد الفهيدى","منه عبدالرحمن خالد","ميار مهلب محجوب","ميس خليل محمد","ناي ابراهيم محمد","نوره عبدالله احمد","هبة الله وليد حمايدي","هند محمد الدباغ"]},{"id":"falah-grade3-4","name":"الصف الثالث (د)","students":["المياسه علي منصر","أنفال سعد الله","ايه حمد دهش","حبيبه عبدالرزاق","حمده على صالح","حنين ياسر عثمان","خديجة سامي الحاج فرج","دانه محمد امين","رسيل بوجلبان","رغد ناصر سالم احمد","روضة جارالله سالم","رونزي مؤمن ماهر علي","رؤى احمد الصليبي","ريم محمد عمر السعدي","ريم ناصر سالم احمد","زينب وليد محمد عباس","سعادة وائل فاروق امين","شيخه هزاع مثنى","فاطمة محمد صالح","فاطمه بشير أحمد","فرح عبدالقيوم","كليمانس زيد علي موسى","لميس احمد الدغيم","لولوة خالد سعيد غالب","ليان مالك احمد اللالا","ماس علي خيري تلحمي","مريم فلارويل فورنل","نوال عبدالعزيز عبدي","نور احمد عبدالرحمن","نور احمد محمد يعقوب","نوره خليل كمال البرديني","هاجر أحمد أحمد","وجن عمر العبيد احمد"]}],"activeClassId":"falah-grade3-1"};</script></head>
+<body>
+<div id="starLayer" style="display: block;"></div><div id="starLayer2" style="display: block;"></div>
+<div class="app">
+  <aside class="sidebar panel">
+    <div class="brand">
+      <div class="brand-logo">🎮</div>
+      <div><h1 id="sideTitle">مَنْ بَطَلَةُ التَّحَدِّي؟</h1><small>منصة الاختيار العشوائي</small></div>
+    </div>
+    <div class="identity">
+      <b id="schoolSide">مدرسة الفلاح الابتدائية للبنات</b>
+      <span id="teacherSide" class="teacher-emphasis">المعلمة / خلود الشمري</span>
+      <span id="lastPickSide" class="last-pick-side">آخر اختيار: —</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="totalCount">33</b><span>إجمالي</span></div>
+      <div class="stat"><b id="remainingCount">33</b><span>متبقٍ</span></div>
+      <div class="stat"><b id="chosenCount">0</b><span>اختيرن</span></div>
+      <div class="stat absent-stat"><b id="absentCount">0</b><span>غياب</span></div>
+    </div>
+    <div class="label">الطالبات</div>
+    <div id="nameList" class="name-list"><div class="name-chip"><span class="dot"></span><span>اسماء اسم خان</span></div><div class="name-chip"><span class="dot"></span><span>الاء ابراهيم جامع</span></div><div class="name-chip"><span class="dot"></span><span>الجازي صلاح حسن</span></div><div class="name-chip"><span class="dot"></span><span>الدانه محمد السليطى</span></div><div class="name-chip"><span class="dot"></span><span>الين طقاطقه</span></div><div class="name-chip"><span class="dot"></span><span>أميره عبدالمجيد</span></div><div class="name-chip"><span class="dot"></span><span>آية ثائر سلطان</span></div><div class="name-chip"><span class="dot"></span><span>ايفا ابراهيم خالد</span></div><div class="name-chip"><span class="dot"></span><span>ايفا اياد عطاالله صالح</span></div><div class="name-chip"><span class="dot"></span><span>تالا عبدالله ابوعيشه</span></div><div class="name-chip"><span class="dot"></span><span>تولين ثائر يعقوب رحال</span></div><div class="name-chip"><span class="dot"></span><span>جوان محمد سامي</span></div><div class="name-chip"><span class="dot"></span><span>دانه محمد علي نصرالله</span></div><div class="name-chip"><span class="dot"></span><span>ديالا عبدالمعين سمير</span></div><div class="name-chip"><span class="dot"></span><span>رزان علي محمد عثمان</span></div><div class="name-chip"><span class="dot"></span><span>رغد محمد فضيل بني</span></div><div class="name-chip"><span class="dot"></span><span>رند احمد ناصر</span></div><div class="name-chip"><span class="dot"></span><span>ريماس يوسف الخالد</span></div><div class="name-chip"><span class="dot"></span><span>زينب طور</span></div><div class="name-chip"><span class="dot"></span><span>شهد نور احمد</span></div><div class="name-chip"><span class="dot"></span><span>شيخه سليمان القحطانى</span></div><div class="name-chip"><span class="dot"></span><span>عالية خالد</span></div><div class="name-chip"><span class="dot"></span><span>عائشة خليل</span></div><div class="name-chip"><span class="dot"></span><span>فردوس رضا محمد</span></div><div class="name-chip"><span class="dot"></span><span>لمى عمر حسن الكوز</span></div><div class="name-chip"><span class="dot"></span><span>مريم عبدالجبار هادي</span></div><div class="name-chip"><span class="dot"></span><span>منيرة على سالم ال مسعود</span></div><div class="name-chip"><span class="dot"></span><span>ميس مرتضى عبدالله</span></div><div class="name-chip"><span class="dot"></span><span>ميمونة عبدالخالق</span></div><div class="name-chip"><span class="dot"></span><span>نجوى سيف</span></div><div class="name-chip"><span class="dot"></span><span>نورة عيسى عبدالله علي</span></div><div class="name-chip"><span class="dot"></span><span>نوره عبدالله منصور عيد</span></div><div class="name-chip"><span class="dot"></span><span>وتين حمزة محجوب محمد</span></div></div>
+    <div class="side-actions">
+      <button class="btn primary full" onclick="openNames()">✏️ إدارة أسماء الطالبات</button>
+      <button class="btn" onclick="openAttendance()">🧑‍🏫 الحضور</button>
+      <button class="btn" onclick="openHistory()">📋 سجل الجلسة</button>
+      <button class="btn" onclick="undoLastPick()">↩️ تراجع</button>
+      <button class="btn" onclick="resetCycle()">🔄 دورة جديدة</button>
+      <button class="btn" onclick="toggleFullscreen()">⛶ ملء الشاشة</button>
+      <button class="btn full" onclick="toggleEffects()" id="effectsBtn">🎵 المؤثرات: مفعّلة</button>
+      
+    </div>
+  </aside>
+
+  <main class="main panel">
+    <div class="topbar">
+      <div class="heading">
+        <h2 id="mainTitle">مَنْ بَطَلَةُ التَّحَدِّي؟</h2>
+        <p><span id="schoolTop">مدرسة الفلاح الابتدائية للبنات</span> · <span id="teacherTop" class="teacher-top-emphasis">المعلمة / خلود الشمري</span></p>
+      </div>
+      <div class="header-actions">
+        <span class="status-chip">🔊 مؤثرات فقط — بدون نطق</span>
+        
+        
+        <button class="btn" onclick="openNames()">👥 الأسماء</button>
+      </div>
+    </div>
+
+    <div class="class-selector-bar">
+      <div class="class-selector-title">👥 الشُّعْبَةُ النَّشِطَةُ</div>
+      <select id="classSelect" class="class-select" onchange="switchClass(this.value)"><option value="falah-grade3-1">الصف الثالث (أ)</option><option value="falah-grade3-2">الصف الثالث (ب)</option><option value="falah-grade3-3">الصف الثالث (ج)</option><option value="falah-grade3-4">الصف الثالث (د)</option></select>
+      <div id="classStudentCount" class="class-student-count">33 طالبة · 0 غياب</div>
+    </div>
+
+    <div id="gameStrip" class="game-strip"><button class="game-card" data-game="rocket" aria-pressed="false"><span class="ico">🚀</span><b>صاروخ البطلات</b><small>اضغط للتفعيل مباشرة</small></button><button class="game-card active" data-game="vault" aria-pressed="true"><span class="ico">🏆</span><b>الخزنة الذهبية</b><small>مُفَعَّل الآن</small></button><button class="game-card" data-game="portal" aria-pressed="false"><span class="ico">🌌</span><b>البوابة الكونية</b><small>اضغط للتفعيل مباشرة</small></button><button class="game-card" data-game="boxes" aria-pressed="false"><span class="ico">🎁</span><b>صناديق المفاجآت</b><small>اضغط للتفعيل مباشرة</small></button><button class="game-card" data-game="arena" aria-pressed="false"><span class="ico">⚡</span><b>ساحة البطلات</b><small>اضغط للتفعيل مباشرة</small></button><button class="game-card" data-game="wheel" aria-pressed="false"><span class="ico">🎡</span><b>عجلة البطلات</b><small>اضغط للتفعيل مباشرة</small></button><button class="game-card" data-game="random" aria-pressed="false"><span class="ico">🎲</span><b>مفاجأة عشوائية</b><small>اختيار طريقة تلقائيًا</small></button></div>
+    <div id="activeGameBanner" class="active-game-banner"><span class="pulse-dot"></span><b id="activeGameBannerName">الخزنة الذهبية</b><small>مُفَعَّل الآن — ابدأ مباشرة من الزر أسفل المشهد</small></div>
+
+    <div class="stage">
+      <div class="control-center">
+        <div class="caption" id="gameCaption">الخزنة الذهبية — الأقفال تدور... من سيظهر؟</div>
+        <div id="nameScreen" class="name-screen">جاهزات للتحدّي؟</div>
+        <button id="startBtn" class="start-btn" type="button" aria-label="بدء اختيار طالبة" onclick="startSelection(event)">🔐 فَتْحُ الْخَزْنَةِ</button>
+      </div>
+
+      <div id="scene-rocket" class="stage-visual rocket-scene active" data-scene="rocket">
+        <div class="space-haze"></div>
+        <div id="rocketCenterName" class="rocket-center-name"></div>
+        <div class="earth-horizon"></div>
+        <div class="launch-tower">
+          <div class="tower-leg tl1"></div><div class="tower-leg tl2"></div>
+          <div class="tower-deck d1"></div><div class="tower-deck d2"></div><div class="tower-deck d3"></div>
+        </div>
+        <div class="real-pad"><div class="pad-light p1"></div><div class="pad-light p2"></div><div class="pad-light p3"></div><div class="pad-light p4"></div></div>
+        <div id="rocketWrap" class="rocket-wrap real-rocket-wrap">
+          <div class="real-rocket">
+            <div class="nose"></div>
+            <div class="rocket-body">
+              <div class="rocket-window"></div>
+              <div class="rocket-band"></div>
+              <div class="rocket-mark">HERO</div>
+              <div id="rocketNameTag" class="rocket-name-tag"></div>
+            </div>
+            <div class="fin fin-l"></div><div class="fin fin-r"></div>
+            <div class="engine"></div>
+          </div>
+          <div class="real-flame"><i></i><b></b></div>
+        </div>
+        <div id="rocketSmoke" class="rocket-smoke">
+          <i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+
+      <div id="scene-vault" class="stage-visual vault-scene" data-scene="vault">
+        <div class="vault-room">
+          <div class="vault-wall-grid"></div>
+          <div class="security-light sl1"></div><div class="security-light sl2"></div>
+        </div>
+        <div id="goldGlow" class="gold-glow"></div>
+        <div class="vault-box realistic-vault">
+          <div class="vault-frame-bolts">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div id="vaultDoor" class="vault-door">
+            <div class="vault-wheel"></div>
+            <div class="vault-keypad"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="vault-status">SECURE</div>
+          </div>
+          <div class="vault-inside">
+            <div id="vaultNameTag" class="vault-name-tag"></div>
+            <div class="gold-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="scene-portal" class="stage-visual portal-scene" data-scene="portal">
+        <div class="portal-room-floor"></div>
+        <div class="portal-machine">
+          <div class="portal-stand left"></div><div class="portal-stand right"></div>
+          <div id="portal" class="portal">
+            <div class="portal-metal-ring"></div>
+            <div class="portal-energy">
+              <i class="e1"></i><i class="e2"></i><i class="e3"></i><i class="e4"></i>
+            </div>
+            <div class="portal-core"></div>
+            <div id="portalNameTag" class="portal-name-tag"></div>
+          </div>
+          <div class="portal-console"><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div id="scene-boxes" class="stage-visual boxes-scene" data-scene="boxes">
+        <div class="warehouse-floor"></div>
+        <div id="boxesCenterName" class="boxes-center-name"></div>
+        <div class="box-row realistic-box-row">
+          <div class="gift crate">
+            <div class="crate-lid"></div><div class="crate-face"><span>?</span><div class="crate-name-tag"></div></div><div class="crate-ribbon"></div>
+          </div>
+          <div class="gift crate">
+            <div class="crate-lid"></div><div class="crate-face"><span>?</span><div class="crate-name-tag"></div></div><div class="crate-ribbon"></div>
+          </div>
+          <div class="gift crate">
+            <div class="crate-lid"></div><div class="crate-face"><span>?</span><div class="crate-name-tag"></div></div><div class="crate-ribbon"></div>
+          </div>
+        </div>
+        <div class="floor-reflection"></div>
+      </div>
+
+      <div id="scene-arena" class="stage-visual arena-scene" data-scene="arena">
+        <div class="stadium-back">
+          <div class="crowd c-row1"></div><div class="crowd c-row2"></div>
+          <div class="stadium-light l1"></div><div class="stadium-light l2"></div><div class="stadium-light l3"></div><div class="stadium-light l4"></div>
+        </div>
+        <div class="arena-floor"></div>
+        <div id="spotlight" class="spotlight"></div>
+        <div id="arenaNameTag" class="arena-name-tag arena-floating-name"></div>
+        <div class="winner-podium">
+          <div class="podium-step second">2</div><div class="podium-step first">1</div><div class="podium-step third">3</div>
+        </div>
+        <div class="arena-cup"><div class="cup-bowl"></div><div class="cup-stem"></div><div class="cup-base"></div><div class="cup-handle hl"></div><div class="cup-handle hr"></div></div>
+      </div>
+
+
+      <div id="scene-wheel" class="stage-visual wheel-scene" data-scene="wheel">
+        <div class="wheel-islamic-bg">
+          <i class="geo g1"></i><i class="geo g2"></i><i class="geo g3"></i><i class="geo g4"></i>
+        </div>
+        <div class="wheel-arch arch-left"></div>
+        <div class="wheel-arch arch-right"></div>
+        <div class="wheel-lantern lantern-left"><i></i></div>
+        <div class="wheel-lantern lantern-right"><i></i></div>
+
+        <div class="wheel-stage">
+          <div class="wheel-crown">✦</div>
+          <div class="wheel-pointer">
+            <div class="pointer-gem"></div>
+          </div>
+          <div id="wheelHalo" class="wheel-halo"></div>
+          <canvas id="studentWheel" class="student-wheel" width="900" height="900"></canvas>
+          <div class="wheel-center">
+            <div class="wheel-center-ring"></div>
+            <div class="wheel-center-title">بَطَلَةُ التَّحَدِّي</div>
+          </div>
+          <div id="wheelWinnerPlate" class="wheel-winner-plate"></div>
+        </div>
+
+        <div class="wheel-bottom-ornament">
+          <span></span><b>عَجَلَةُ الْأَبْطَالِ</b><span></span>
+        </div>
+      </div>
+
+      <div id="countdown" class="countdown"><div id="count" class="count">3</div></div>
+      <div id="stageConfetti" class="confetti stage-confetti"></div>
+      <div id="resultDock" class="result-dock">
+        <div class="result-dock-text">
+          <div id="dockWinnerName" class="dock-winner-name"></div>
+          <div id="dockPhrase" class="dock-phrase"></div>
+        </div>
+        <div class="result-dock-actions">
+          <button class="btn green" onclick="celebrate()">👏 أحسنت!</button>
+          <button class="btn" onclick="undoLastPick()">↩️ تراجع عن الاختيار</button>
+          <button class="btn primary" onclick="closeWinner()">🎮 اختيار جديد</button>
+        </div>
+      </div>
+      <div id="winner" class="winner">
+        <div id="confetti" class="confetti"></div>
+        <div class="winner-card">
+          <div class="badge" id="winnerBadge">🏆 بطلة التحدّي</div>
+          <div id="winnerName" class="winner-name">—</div>
+          <div id="winnerSub" class="winner-sub">استعدّي يا بطلة... الدور عليكِ!</div>
+          <div class="winner-actions">
+            <button class="btn green" onclick="celebrate()">👏 أحسنت!</button>
+            <button class="btn primary" onclick="closeWinner()">🎮 اختيار جديد</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Names -->
+<div id="namesModal" class="modal">
+  <div class="modal-card">
+    <h3 id="namesModalTitle">إدارة أسماء الطالبات</h3>
+    <div class="hint">اسم واحد في كل سطر. يتم تعديل أسماء الشعبة المختارة فقط، وهذه الوظيفة متاحة أيضًا في نسخة اللعب المصدّرة.</div>
+    <textarea id="namesInput"></textarea>
+    <div class="modal-actions"><button class="btn primary" onclick="saveNames()">💾 حفظ الأسماء</button><button class="btn" onclick="closeModal('namesModal')">إلغاء</button></div>
+  </div>
+</div>
+
+
+<!-- Attendance -->
+<div id="attendanceModal" class="modal">
+  <div class="modal-card">
+    <h3 id="attendanceTitle">🧑‍🏫 الحضور والغياب</h3>
+    <div class="hint">ضعي علامة «غائبة» لاستبعاد الطالبة مؤقتًا من جميع الألعاب دون حذف اسمها.</div>
+    <div class="attendance-toolbar">
+      <button class="btn" onclick="markAllPresent()">✅ جميع الطالبات حاضرات</button>
+      <span id="attendanceSummary" class="status-chip"></span>
+    </div>
+    <div id="attendanceList" class="attendance-list"></div>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="saveAttendance()">💾 حفظ الحضور</button>
+      <button class="btn" onclick="closeModal('attendanceModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- History -->
+<div id="historyModal" class="modal">
+  <div class="modal-card">
+    <h3 id="historyTitle">📋 سجل الجلسة</h3>
+    <div id="historyStats" class="history-stats"></div>
+    <div id="historyList" class="history-list"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="undoLastPick()">↩️ تراجع عن آخر اختيار</button>
+      <button class="btn danger" onclick="clearHistory()">🗑️ مسح سجل الجلسة</button>
+      <button class="btn" onclick="closeModal('historyModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Excel Import -->
+
+
+
+<!-- Admin -->
+
+
+<script>
+const BUILD_MODE = window.__BUILD_MODE__ || "admin";
+const EXPORTED_CONFIG = window.__EXPORTED_CONFIG__ || null;
+const STORAGE_KEY = "falahGirlsG3HeroAdminConfigV14";
+const PLAY_INSTANCE = BUILD_MODE==="play" ? String(EXPORTED_CONFIG?.exportId||"default") : "admin";
+const PLAY_CLASSES_KEY = "falahGirlsG3HeroRuntimeClassesV14:"+PLAY_INSTANCE;
+const PLAY_ACTIVE_CLASS_KEY = "falahGirlsG3HeroActiveClassV14:"+PLAY_INSTANCE;
+const USED_KEY = BUILD_MODE==="play" ? "falahGirlsG3HeroUsedPlayV14:"+PLAY_INSTANCE : "falahGirlsG3HeroUsedAdminV14";
+const ABSENT_KEY = BUILD_MODE==="play" ? "falahGirlsG3HeroAbsentPlayV14:"+PLAY_INSTANCE : "falahGirlsG3HeroAbsentAdminV14";
+const HISTORY_KEY = BUILD_MODE==="play" ? "falahGirlsG3HeroHistoryPlayV14:"+PLAY_INSTANCE : "falahGirlsG3HeroHistoryAdminV14";
+const PARTICIPATION_KEY = BUILD_MODE==="play" ? "falahGirlsG3HeroParticipationPlayV14:"+PLAY_INSTANCE : "falahGirlsG3HeroParticipationAdminV14";
+
+const GAME_META = {
+  rocket:{icon:"🚀", defaultName:"صاروخ البطلات", start:"🚀 إِطْلَاقُ الْمُهِمَّةِ", caption:"استعدّي للانطلاق إلى الفضاء"},
+  vault:{icon:"🏆", defaultName:"الخزنة الذهبية", start:"🔐 فَتْحُ الْخَزْنَةِ", caption:"الأقفال تدور... من سيظهر؟"},
+  portal:{icon:"🌌", defaultName:"البوابة الكونية", start:"✨ فَتْحُ الْبَوَّابَةِ", caption:"بوابة الاختيار تبحث عن بطلة"},
+  boxes:{icon:"🎁", defaultName:"صناديق المفاجآت", start:"🎁 اِكْشِفِي الْمُفَاجَأَةَ", caption:"اختاري صندوقًا... والمفاجأة قادمة"},
+  arena:{icon:"⚡", defaultName:"ساحة البطلات", start:"⚡ اِبْدَئِي التَّحَدِّي", caption:"الأضواء تبحث عن بطلة الجولة"},
+  wheel:{icon:"🎡", defaultName:"عجلة البطلات", start:"🎡 أَدِيرِي الْعَجَلَةَ", caption:"عجلة فاخرة تختار بطلة الجولة"}
+};
+
+const DEFAULT_CONFIG = {
+ title:"مَنْ بَطَلَةُ التَّحَدِّي؟", school:"مدرسة الفلاح الابتدائية للبنات", teacher:"المعلمة / خلود الشمري", readyText:"جاهزات للتحدّي؟", playPinHash:"", exportId:"",
+ noRepeat:true, allowRandomMode:true, accent:"#45dfff", bg:"#07152d", stars:true,
+ effectsDefault:true,
+ phrases:["أَنْتِ نَجْمَةُ هَذِهِ الْجَوْلَةِ!","اسْتَعِدِّي لِتُبْدِعِي فِي التَّحَدِّي!","دَوْرُكِ لِتُظْهِرِي تَمَيُّزَكِ!","يَا بَطَلَةَ الْفَلَاحِ، انْطَلِقِي بِثِقَةٍ!","نَحْنُ مُتَحَمِّسَاتٌ لِمُشَارَكَتِكِ!","اجْعَلِي هَذِهِ الْجَوْلَةَ مُشْرِقَةً بِأَفْكَارِكِ!"],
+ games:{
+  rocket:{enabled:true,name:"صاروخ البطلات",start:"🚀 إِطْلَاقُ الْمُهِمَّةِ"},
+  vault:{enabled:true,name:"الخزنة الذهبية",start:"🔐 فَتْحُ الْخَزْنَةِ"},
+  portal:{enabled:true,name:"البوابة الكونية",start:"✨ فَتْحُ الْبَوَّابَةِ"},
+  boxes:{enabled:true,name:"صناديق المفاجآت",start:"🎁 اِكْشِفِي الْمُفَاجَأَةَ"},
+  arena:{enabled:true,name:"ساحة البطلات",start:"⚡ اِبْدَئِي التَّحَدِّي"},
+  wheel:{enabled:true,name:"عجلة البطلات",start:"🎡 أَدِيرِي الْعَجَلَةَ"}
+ },
+ classes:[{"id":"falah-grade3-1","name":"الصف الثالث (أ)","students":["اسماء اسم خان","الاء ابراهيم جامع","الجازي صلاح حسن","الدانه محمد السليطى","الين طقاطقه","أميره عبدالمجيد","آية ثائر سلطان","ايفا ابراهيم خالد","ايفا اياد عطاالله صالح","تالا عبدالله ابوعيشه","تولين ثائر يعقوب رحال","جوان محمد سامي","دانه محمد علي نصرالله","ديالا عبدالمعين سمير","رزان علي محمد عثمان","رغد محمد فضيل بني","رند احمد ناصر","ريماس يوسف الخالد","زينب طور","شهد نور احمد","شيخه سليمان القحطانى","عالية خالد","عائشة خليل","فردوس رضا محمد","لمى عمر حسن الكوز","مريم عبدالجبار هادي","منيرة على سالم ال مسعود","ميس مرتضى عبدالله","ميمونة عبدالخالق","نجوى سيف","نورة عيسى عبدالله علي","نوره عبدالله منصور عيد","وتين حمزة محجوب محمد"]},{"id":"falah-grade3-2","name":"الصف الثالث (ب)","students":["اسيا احمد","العنود خليف الهنيدي","العنود عبد العزيز صالح","اميره حاجى مرادي تختى","ايمان فيصل محمد البدر","تقي محمد احمد الفضل","جوان والدائم عثمان","حبيبه احمد","دانا حسان احمد الهندي","رقيه احمد رنج برى زاده","رقيه عبد الله محمد","رند وجلبان","روز خالد بشتاوي","ريم دخيل مسلم المرى","ريم سامح عبد الصابر","زينه محمد معتصم","زينه هيثم محمود عقل","سلوى احمد النصر","سما مأمون عبد الرحمن","سوار مصطفي بشير","شهد بلال حسين البزور","شيخة حمد عجيان حمد","علياء ياسين الهواري","غنى اسامه المحمد","كادي عثمان الحسين","كرما عاصم عبد الوهاب","لين محمد اسماعيل","مريم وليد جوده عبدربه","منة الله محمد فرج","منى هشام ابراهيم عوض","ناديه كدا دووست","نهى شاذلي نادر خوجلي","هيا عبد الله صالح"]},{"id":"falah-grade3-3","name":"الصف الثالث (ج)","students":["المى ابراهيم احمد","ايسل محمد","ايلين ابرهيم احمد ا","بخيته عبدالله محمد","تالا محمد شاكر جبر","جميله محمود عبدالله","جويرية احمد","حفصه شيراز حسن","خديجه احمد خالد","رغد خليل شنبدى","رنيم بوجلبان","روزه محمد سعيد","روميسه احمد علي","سلوى عبدالله اسماعيل عبدالله الشرشنى","سنا عيسى حمد النصف","شوق خالد مطهر علي","شيخه نويصر","غلا احمد باسم ملاح","فاطمه صلاح رحمتى","كوثر احمد باقري زاده","لارا عمار خضر دراغمة","لولوة سالم شعبان سالم","مرافئ يسرى ياسر","مريم حسام سيد احمد","مزنه على حمد الفهيدى","منه عبدالرحمن خالد","ميار مهلب محجوب","ميس خليل محمد","ناي ابراهيم محمد","نوره عبدالله احمد","هبة الله وليد حمايدي","هند محمد الدباغ"]},{"id":"falah-grade3-4","name":"الصف الثالث (د)","students":["المياسه علي منصر","أنفال سعد الله","ايه حمد دهش","حبيبه عبدالرزاق","حمده على صالح","حنين ياسر عثمان","خديجة سامي الحاج فرج","دانه محمد امين","رسيل بوجلبان","رغد ناصر سالم احمد","روضة جارالله سالم","رونزي مؤمن ماهر علي","رؤى احمد الصليبي","ريم محمد عمر السعدي","ريم ناصر سالم احمد","زينب وليد محمد عباس","سعادة وائل فاروق امين","شيخه هزاع مثنى","فاطمة محمد صالح","فاطمه بشير أحمد","فرح عبدالقيوم","كليمانس زيد علي موسى","لميس احمد الدغيم","لولوة خالد سعيد غالب","ليان مالك احمد اللالا","ماس علي خيري تلحمي","مريم فلارويل فورنل","نوال عبدالعزيز عبدي","نور احمد عبدالرحمن","نور احمد محمد يعقوب","نوره خليل كمال البرديني","هاجر أحمد أحمد","وجن عمر العبيد احمد"]}],
+ activeClassId:"falah-grade3-1",
+ students:[]
+};
+
+function deepClone(x){return JSON.parse(JSON.stringify(x))}
+function mergeDeep(base, extra){
+ const out=deepClone(base);
+ if(!extra) return out;
+ Object.keys(extra).forEach(k=>{
+   if(extra[k] && typeof extra[k]==="object" && !Array.isArray(extra[k]) && out[k] && typeof out[k]==="object" && !Array.isArray(out[k])) out[k]=mergeDeep(out[k],extra[k]);
+   else out[k]=extra[k];
+ });
+ return out;
+}
+let config;
+if(EXPORTED_CONFIG){
+  config=mergeDeep(DEFAULT_CONFIG,EXPORTED_CONFIG);
+  const runtimeClasses=JSON.parse(localStorage.getItem(PLAY_CLASSES_KEY)||"null");
+  if(Array.isArray(runtimeClasses)&&runtimeClasses.length) config.classes=runtimeClasses;
+  const runtimeActive=localStorage.getItem(PLAY_ACTIVE_CLASS_KEY);
+  if(runtimeActive) config.activeClassId=runtimeActive;
+}else{
+  config=mergeDeep(DEFAULT_CONFIG,JSON.parse(localStorage.getItem(STORAGE_KEY)||"null"));
+}
+
+function migrateClasses(){
+ if(!Array.isArray(config.classes)||!config.classes.length){
+   const legacy=Array.isArray(config.students)?config.students:[];
+   config.classes=[{id:"class-legacy",name:"الصف / الشعبة",students:legacy}];
+ }
+ config.classes=config.classes.map((c,i)=>({
+   id:String(c.id||("class-"+(i+1))),
+   name:String(c.name||("الشعبة "+(i+1))),
+   students:Array.isArray(c.students)?c.students.filter(Boolean):[]
+ }));
+ if(!config.classes.some(c=>c.id===config.activeClassId)) config.activeClassId=config.classes[0].id;
+}
+migrateClasses();
+
+let usedByClass=JSON.parse(localStorage.getItem(USED_KEY)||"{}");
+if(!usedByClass || typeof usedByClass!=="object" || Array.isArray(usedByClass)) usedByClass={};
+let absentByClass=JSON.parse(localStorage.getItem(ABSENT_KEY)||"{}");
+if(!absentByClass || typeof absentByClass!=="object" || Array.isArray(absentByClass)) absentByClass={};
+let historyByClass=JSON.parse(localStorage.getItem(HISTORY_KEY)||"{}");
+if(!historyByClass || typeof historyByClass!=="object" || Array.isArray(historyByClass)) historyByClass={};
+let participationByClass=JSON.parse(localStorage.getItem(PARTICIPATION_KEY)||"{}");
+if(!participationByClass || typeof participationByClass!=="object" || Array.isArray(participationByClass)) participationByClass={};
+let used=[], absent=[];
+let effectsOn=BUILD_MODE==="play" ? JSON.parse(localStorage.getItem("falahGirlsG3EffectsPlayV14:"+PLAY_INSTANCE) ?? JSON.stringify(config.effectsDefault)) : config.effectsDefault;
+let activeGame="rocket", busy=false, audioCtx=null;
+
+function getActiveClass(){
+ return config.classes.find(c=>c.id===config.activeClassId) || config.classes[0];
+}
+function syncActiveClass(){
+ const cls=getActiveClass();
+ if(!cls) return;
+ config.activeClassId=cls.id;
+ config.students=cls.students;
+ used=Array.isArray(usedByClass[cls.id]) ? usedByClass[cls.id] : [];
+ absent=Array.isArray(absentByClass[cls.id]) ? absentByClass[cls.id] : [];
+}
+function saveCurrentClassState(){
+ const cls=getActiveClass();
+ if(!cls) return;
+ cls.students=Array.isArray(config.students)?config.students:[];
+ usedByClass[cls.id]=Array.isArray(used)?used:[];
+ absentByClass[cls.id]=Array.isArray(absent)?absent:[];
+}
+syncActiveClass();
+
+function saveConfig(){
+ saveCurrentClassState();
+ if(BUILD_MODE==="admin") localStorage.setItem(STORAGE_KEY,JSON.stringify(config));
+ else{
+   localStorage.setItem(PLAY_CLASSES_KEY,JSON.stringify(config.classes));
+   localStorage.setItem(PLAY_ACTIVE_CLASS_KEY,config.activeClassId);
+ }
+ localStorage.setItem(USED_KEY,JSON.stringify(usedByClass));
+ localStorage.setItem(ABSENT_KEY,JSON.stringify(absentByClass));
+ localStorage.setItem(HISTORY_KEY,JSON.stringify(historyByClass));
+ localStorage.setItem(PARTICIPATION_KEY,JSON.stringify(participationByClass));
+ if(BUILD_MODE==="play"){
+  localStorage.setItem("falahGirlsG3EffectsPlayV14:"+PLAY_INSTANCE,JSON.stringify(effectsOn));
+ }
+}
+function enabledGames(){return Object.keys(GAME_META).filter(k=>config.games[k]?.enabled)}
+function normalize(){
+ const cls=getActiveClass();
+ if(!cls) return;
+ config.students=cls.students;
+ used=(usedByClass[cls.id]||[]).filter(n=>config.students.includes(n));
+ absent=(absentByClass[cls.id]||[]).filter(n=>config.students.includes(n));
+ usedByClass[cls.id]=used;absentByClass[cls.id]=absent;
+ if(config.noRepeat && used.length>=config.students.length && config.students.length){
+   used=[];
+   usedByClass[cls.id]=[];
+ }
+ let enabled=enabledGames();
+ if(!enabled.includes(activeGame)) activeGame=enabled[0]||"rocket";
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function render(){
+ normalize();
+ document.body.classList.toggle("play-only",BUILD_MODE==="play");
+ document.documentElement.style.setProperty("--accent",config.accent||"#45dfff");
+ document.documentElement.style.setProperty("--bg",config.bg||"#07152d");
+ document.getElementById("starLayer").style.display=config.stars?"block":"none";
+ document.getElementById("starLayer2").style.display=config.stars?"block":"none";
+ ["sideTitle","mainTitle"].forEach(id=>document.getElementById(id).textContent=config.title||DEFAULT_CONFIG.title);
+ const school=config.school||"اسم المدرسة"; const teacher=config.teacher||"اسم المعلمة";
+ document.getElementById("schoolSide").textContent=school; document.getElementById("schoolTop").textContent=school;
+ document.getElementById("teacherSide").textContent=teacher; document.getElementById("teacherTop").textContent=teacher;
+ renderClassSelector();
+ document.getElementById("totalCount").textContent=config.students.length;
+ const present=config.students.filter(n=>!absent.includes(n));
+ const remaining=present.filter(n=>!used.includes(n)).length;
+ document.getElementById("remainingCount").textContent=remaining;
+ document.getElementById("chosenCount").textContent=used.filter(n=>present.includes(n)).length;
+ document.getElementById("absentCount").textContent=absent.length;
+ const list=document.getElementById("nameList"); list.innerHTML="";
+ config.students.forEach(n=>{
+  const d=document.createElement("div"); d.className="name-chip"+(used.includes(n)?" used":"")+(absent.includes(n)?" absent":"");
+  d.innerHTML='<span class="dot"></span><span>'+escapeHtml(n)+'</span>'; list.appendChild(d);
+ });
+ renderLastPick();
+ document.getElementById("effectsBtn").textContent=effectsOn?"🎵 المؤثرات: مفعّلة":"🎵 المؤثرات: متوقفة";
+ renderGameStrip(); setGame(activeGame,false); refreshWheel(); saveConfig();
+}
+function renderClassSelector(){
+ const select=document.getElementById("classSelect");
+ if(!select) return;
+ select.innerHTML="";
+ config.classes.forEach(c=>{
+   const o=document.createElement("option");
+   o.value=c.id;o.textContent=c.name;
+   select.appendChild(o);
+ });
+ select.value=config.activeClassId;
+ const cls=getActiveClass();
+ const count=cls?.students?.length||0;
+ const abs=(absentByClass[cls?.id]||[]).length;
+ document.getElementById("classStudentCount").textContent=count+" طالبة · "+abs+" غياب";
+ const side=document.getElementById("classSide");
+ if(side) side.textContent="الشعبة: "+(cls?.name||"");
+}
+function switchClass(id){
+ if(busy || !config.classes.some(c=>c.id===id)) return;
+ saveCurrentClassState();
+ config.activeClassId=id;
+ syncActiveClass();
+ resetVisuals();
+ document.getElementById("resultDock")?.classList.remove("show");
+ document.getElementById("nameScreen").textContent=config.readyText||"جاهزات للتحدّي؟";
+ saveConfig();
+ render();
+ wheelRotation=0;renderWheel(wheelRotation);
+ clickSfx();
+}
+
+let wheelRotation=0;
+let wheelRAF=null;
+
+function wheelPool(){
+  let pool=config.students.filter(n=>!absent.includes(n));
+  if(config.noRepeat){
+    const remaining=pool.filter(n=>!used.includes(n));
+    if(remaining.length) pool=remaining;
+  }
+  return pool;
+}
+function shortWheelName(name){
+  const parts=String(name||"").trim().split(/\s+/);
+  if(parts.length<=2) return parts.join(" ");
+  const short=parts[0]+" "+parts[1];
+  return short.length>17 ? short.slice(0,16)+"…" : short;
+}
+function renderWheel(rotation=wheelRotation){
+  const canvas=document.getElementById("studentWheel");
+  if(!canvas) return;
+  const ctx=canvas.getContext("2d");
+  const pool=wheelPool();
+  const W=900,H=900,cx=W/2,cy=H/2,R=420;
+  ctx.clearRect(0,0,W,H);
+
+  // Outer luxury rings
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.beginPath();ctx.arc(0,0,R+20,0,Math.PI*2);
+  let ring=ctx.createRadialGradient(0,0,R-5,0,0,R+20);
+  ring.addColorStop(0,"#173f49");ring.addColorStop(.35,"#efcf78");ring.addColorStop(.62,"#7c5819");ring.addColorStop(1,"#e8c66c");
+  ctx.fillStyle=ring;ctx.fill();
+  ctx.beginPath();ctx.arc(0,0,R+7,0,Math.PI*2);ctx.fillStyle="#082d37";ctx.fill();
+  ctx.restore();
+
+  if(!pool.length){
+    ctx.fillStyle="#e8d9aa";ctx.font="700 35px Segoe UI, Tahoma";ctx.textAlign="center";
+    ctx.fillText("لا توجد أسماء في هذه الشعبة",cx,cy);return;
+  }
+
+  const n=pool.length, arc=Math.PI*2/n;
+  const palette=["#0b5f60","#123f5e","#e7d7aa","#0d6b5b","#263d59","#c49b43","#f1e5c3","#174e4c"];
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(rotation);
+
+  for(let i=0;i<n;i++){
+    const a0=-Math.PI/2+i*arc, a1=a0+arc;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,a0,a1);ctx.closePath();
+    ctx.fillStyle=palette[i%palette.length];ctx.fill();
+
+    // segment separator
+    ctx.strokeStyle="rgba(255,241,190,.62)";ctx.lineWidth=n>28?1.6:2.4;ctx.stroke();
+
+    // subtle inner shine
+    ctx.beginPath();ctx.arc(0,0,R-13,a0,a1);
+    ctx.strokeStyle="rgba(255,255,255,.06)";ctx.lineWidth=7;ctx.stroke();
+
+    // label
+    const mid=a0+arc/2;
+    ctx.save();ctx.rotate(mid);
+    ctx.translate(R*0.61,0);
+    if(mid>Math.PI/2 && mid<Math.PI*1.5) ctx.rotate(Math.PI);
+    const dark=[2,6].includes(i%8);
+    ctx.fillStyle=dark?"#173c3b":"#fff7df";
+    ctx.textAlign="center";ctx.textBaseline="middle";
+    const fs=n>=32?15:n>=25?17:n>=18?19:22;
+    ctx.font=`800 ${fs}px Segoe UI, Tahoma, Arial`;
+    const label=shortWheelName(pool[i]);
+    ctx.fillText(label,0,0,R*.42);
+    ctx.restore();
+  }
+
+  // rivets
+  for(let i=0;i<n;i++){
+    const a=-Math.PI/2+(i+.5)*arc;
+    const x=Math.cos(a)*(R-18),y=Math.sin(a)*(R-18);
+    ctx.beginPath();ctx.arc(x,y,n>28?4.2:5.2,0,Math.PI*2);
+    ctx.fillStyle="#f4d477";ctx.shadowColor="rgba(255,225,130,.5)";ctx.shadowBlur=7;ctx.fill();
+  }
+  ctx.restore();
+
+  // static inner decorative ring
+  ctx.beginPath();ctx.arc(cx,cy,R*.28,0,Math.PI*2);ctx.strokeStyle="rgba(253,224,133,.75)";ctx.lineWidth=4;ctx.stroke();
+}
+function refreshWheel(){
+  if(activeGame==="wheel" || document.getElementById("scene-wheel")?.classList.contains("active")){
+    renderWheel(wheelRotation);
+  }
+}
+function angleNormalize(a){
+  const t=Math.PI*2;return ((a%t)+t)%t;
+}
+function spinWheelToWinner(winner){
+  return new Promise(resolve=>{
+    const pool=wheelPool();
+    const idx=pool.indexOf(winner);
+    if(idx<0){resolve();return}
+    const n=pool.length,arc=Math.PI*2/n;
+    const current=angleNormalize(wheelRotation);
+    const desired=angleNormalize(-(idx+.5)*arc);
+    let delta=angleNormalize(desired-current);
+    const turns=5+Math.floor(Math.random()*3);
+    const total=turns*Math.PI*2+delta;
+    const start=wheelRotation, duration=4700;
+    const t0=performance.now();
+    const scene=document.getElementById("scene-wheel");
+    const plate=document.getElementById("wheelWinnerPlate");
+    scene?.classList.add("spinning");scene?.classList.remove("wheel-win");
+    if(plate){plate.textContent="";plate.classList.remove("show")}
+    let lastTick=-1;
+
+    function easeOutQuint(t){return 1-Math.pow(1-t,5)}
+    function frame(now){
+      const p=Math.min(1,(now-t0)/duration);
+      wheelRotation=start+total*easeOutQuint(p);
+      renderWheel(wheelRotation);
+      const tick=Math.floor((wheelRotation/arc));
+      if(tick!==lastTick){lastTick=tick;tone(360+(tick%4)*45,.035,"triangle",.012)}
+      if(p<1){
+        wheelRAF=requestAnimationFrame(frame);
+      }else{
+        wheelRotation=start+total;
+        renderWheel(wheelRotation);
+        scene?.classList.remove("spinning");scene?.classList.add("wheel-win");
+        resolve();
+      }
+    }
+    wheelRAF=requestAnimationFrame(frame);
+  });
+}
+
+function renderGameStrip(){
+ const strip=document.getElementById("gameStrip"); strip.innerHTML="";
+ enabledGames().forEach(k=>{
+  const b=document.createElement("button");
+  b.className="game-card"+(k===activeGame?" active":"");
+  b.dataset.game=k;
+  b.setAttribute("aria-pressed",k===activeGame?"true":"false");
+  b.onclick=()=>setGame(k,true);
+  b.innerHTML='<span class="ico">'+GAME_META[k].icon+'</span><b>'+escapeHtml(config.games[k].name)+'</b><small>'+(k===activeGame?'مُفَعَّل الآن':'اضغط للتفعيل مباشرة')+'</small>';
+  strip.appendChild(b);
+ });
+ if(config.allowRandomMode && enabledGames().length>1){
+  const b=document.createElement("button"); b.className="game-card"; b.dataset.game="random"; b.onclick=()=>randomGame();
+  b.innerHTML='<span class="ico">🎲</span><b>مفاجأة عشوائية</b><small>اختيار طريقة تلقائيًا</small>'; strip.appendChild(b);
+ }
+}
+function setGame(k,sound=true){
+ if(!config.games[k]?.enabled) return;
+
+ // Block switching only while an animation is genuinely running.
+ // Once the result is visible, busy is already false and switching is immediate.
+ if(busy) return;
+
+ activeGame=k;
+ document.getElementById("resultDock")?.classList.remove("show");
+ resetVisuals();
+ document.querySelectorAll(".stage-visual").forEach(x=>x.classList.remove("active"));
+ const scene=document.getElementById("scene-"+k);
+ if(scene){ scene.classList.add("active"); }
+ document.getElementById("gameCaption").textContent=config.games[k].name+" — "+GAME_META[k].caption;
+ document.getElementById("startBtn").textContent=config.games[k].start||GAME_META[k].start;
+ document.getElementById("activeGameBannerName").textContent=config.games[k].name;
+ if(!busy) document.getElementById("nameScreen").textContent=config.readyText||"جاهزات للتحدّي؟";
+ document.getElementById("resultDock")?.classList.remove("show");
+ document.querySelectorAll(".game-card[data-game]").forEach(card=>{
+   const active=card.dataset.game===k;
+   card.classList.toggle("active",active);
+   card.setAttribute("aria-pressed",active?"true":"false");
+   const sm=card.querySelector("small");
+   if(sm && card.dataset.game!=="random") sm.textContent=active?"مُفَعَّل الآن":"اضغط للتفعيل مباشرة";
+ });
+ const activeCard=document.querySelector('.game-card[data-game="'+k+'"]');
+ if(activeCard) activeCard.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+ if(k==="wheel") renderWheel(wheelRotation);
+ if(sound){ clickSfx(); tone(680,.08,"sine",.025,.04); }
+}
+function randomGame(){
+ if(busy)return;
+ const g=enabledGames(); if(!g.length)return;
+ setGame(g[secureRandomInt(g.length)]);
+ document.getElementById("nameScreen").textContent="🎲 تم تفعيل "+config.games[activeGame].name+" مباشرة";
+}
+function secureRandomInt(max){
+ if(max<=1) return 0;
+ if(window.crypto?.getRandomValues){
+   const limit=Math.floor(0x100000000/max)*max;
+   const a=new Uint32Array(1);let x;
+   do{crypto.getRandomValues(a);x=a[0]}while(x>=limit);
+   return x%max;
+ }
+ return Math.floor(Math.random()*max);
+}
+function presentStudents(){return config.students.filter(n=>!absent.includes(n))}
+function pickRandom(){
+ const present=presentStudents();
+ if(!present.length) return null;
+ if(config.noRepeat){
+  let remaining=present.filter(n=>!used.includes(n));
+  if(!remaining.length){used=[];usedByClass[getActiveClass().id]=[];remaining=[...present]}
+  return remaining[secureRandomInt(remaining.length)];
+ }
+ return present[secureRandomInt(present.length)];
+}
+
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();return audioCtx}
+function tone(freq=440,dur=.1,type="sine",gain=.05,when=0){
+ if(!effectsOn)return; const ctx=getAudio(),o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;
+ g.gain.setValueAtTime(gain,ctx.currentTime+when);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+when+dur);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+when);o.stop(ctx.currentTime+when+dur)
+}
+function clickSfx(){tone(530,.06,"triangle",.05);tone(760,.08,"triangle",.025,.04)}
+function tickSfx(){tone(250,.16,"square",.04);tone(500,.08,"sine",.022,.07)}
+function winSfx(){[523,659,784,1046].forEach((f,i)=>tone(f,.38,"sine",.05,i*.1))}
+function clapSfx(){
+ if(!effectsOn)return;const ctx=getAudio();
+ for(let i=0;i<12;i++){const b=ctx.createBuffer(1,ctx.sampleRate*.07,ctx.sampleRate),d=b.getChannelData(0);for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*(1-j/d.length);const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=b;g.gain.value=.045;s.connect(g);g.connect(ctx.destination);s.start(ctx.currentTime+i*.08)}
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+async function startSelection(ev){
+ if(ev){ev.preventDefault();ev.stopPropagation()}
+ if(busy)return;
+ const present=presentStudents();
+ if(!present.length){alert("لا توجد طالبات حاضرات في الشعبة المختارة.");return}
+ hideSceneNames();
+ document.getElementById("resultDock").classList.remove("show");
+ busy=true;document.getElementById("startBtn").disabled=true;clickSfx();
+ await countdown();
+ const screen=document.getElementById("nameScreen");screen.classList.add("spin");
+ const spinPool=present.length?present:config.students;
+ let spins=0;const spin=setInterval(()=>{screen.textContent=spinPool[secureRandomInt(spinPool.length)];tone(350+(spins%7)*45,.035,"sine",.01);spins++},80);
+ const winner=pickRandom(); if(!winner){clearInterval(spin);busy=false;document.getElementById("startBtn").disabled=false;return}
+ await animateGame(activeGame,winner);
+ clearInterval(spin);
+ screen.textContent=winner;screen.classList.remove("spin");
+ showSceneName(winner);
+ if(config.noRepeat&&!used.includes(winner))used.push(winner);
+ recordSelection(winner);
+ saveConfig(); renderStatsOnly();renderLastPick();
+ await sleep(180); showWinner(winner);
+}
+async function countdown(){
+ const cd=document.getElementById("countdown"),c=document.getElementById("count");cd.classList.add("show");
+ for(const v of ["3","2","1"]){c.textContent=v;c.style.animation="none";void c.offsetWidth;c.style.animation="countpop .7s ease";tickSfx();await sleep(620)}
+ c.textContent="انطلاق!";tone(900,.3,"sine",.07);await sleep(350);cd.classList.remove("show")
+}
+async function animateGame(k,winner){
+ if(k==="rocket"){
+  const r=document.getElementById("rocketWrap"),sm=document.getElementById("rocketSmoke");
+  r.classList.add("ready"); sm.classList.add("show");
+  await sleep(480); tone(78,2.6,"sawtooth",.055); r.classList.add("go");
+  await sleep(2100);
+ }else if(k==="vault"){
+  const d=document.getElementById("vaultDoor");
+  d.classList.add("crack");
+  for(let i=0;i<10;i++){tone(145+i*18,.07,"square",.022);await sleep(115)}
+  d.classList.remove("crack"); d.classList.add("open");
+  document.getElementById("goldGlow").classList.add("show");
+  tone(430,.22,"triangle",.04); tone(720,.75,"sine",.06,.12); await sleep(850);
+ }else if(k==="portal"){
+  const p=document.getElementById("portal");
+  for(let i=0;i<12;i++){tone(190+i*48,.075,"sine",.018);await sleep(105)}
+  p.classList.add("flash"); tone(920,.55,"sine",.065); tone(1280,.42,"sine",.035,.08); await sleep(420);
+ }else if(k==="boxes"){
+  const boxes=[...document.querySelectorAll(".crate")];
+  boxes.forEach(b=>b.classList.add("mix"));
+  for(let i=0;i<12;i++){tone(280+i*26,.05,"triangle",.015);await sleep(100)}
+  boxes.forEach(b=>b.classList.remove("mix"));
+  const chosen=boxes[Math.floor(Math.random()*boxes.length)];
+  window.__selectedCrateIndex = boxes.indexOf(chosen);
+  chosen.classList.add("selected"); tone(510,.18,"triangle",.04);tone(880,.55,"sine",.06,.08);await sleep(700);
+ }else if(k==="arena"){
+  const s=document.getElementById("spotlight");s.classList.add("scan");
+  for(let i=0;i<12;i++){tone(125+i*16,.075,"square",.018);await sleep(105)}
+  s.classList.remove("scan"); tone(390,.18,"triangle",.04);tone(740,.55,"sine",.065,.08);await sleep(520);
+ }else if(k==="wheel"){
+  await spinWheelToWinner(winner);
+  tone(660,.18,"triangle",.045);tone(880,.55,"sine",.065,.08);
+  await sleep(280);
+ }
+}
+function hideSceneNames(){
+ const ids=["rocketNameTag","vaultNameTag","portalNameTag","arenaNameTag","wheelWinnerPlate","boxesCenterName","rocketCenterName"];
+ ids.forEach(id=>{const el=document.getElementById(id); if(el){el.textContent=""; el.classList.remove("show")}});
+ document.querySelectorAll(".crate-name-tag").forEach(el=>{el.textContent=""; el.classList.remove("show")});
+}
+function showSceneName(name){
+ hideSceneNames();
+ if(activeGame==="rocket"){
+   const el=document.getElementById("rocketCenterName");
+   if(el){el.textContent=name; el.classList.add("show")}
+ }else if(activeGame==="vault"){
+   const el=document.getElementById("vaultNameTag");
+   if(el){el.textContent=name; el.classList.add("show")}
+ }else if(activeGame==="portal"){
+   const el=document.getElementById("portalNameTag");
+   if(el){el.textContent=name; el.classList.add("show")}
+ }else if(activeGame==="boxes"){
+   const el=document.getElementById("boxesCenterName");
+   if(el){el.textContent=name; el.classList.add("show")}
+ }else if(activeGame==="arena"){
+   const el=document.getElementById("arenaNameTag");
+   if(el){el.textContent=name; el.classList.add("show")}
+ }else if(activeGame==="wheel"){
+   const el=document.getElementById("wheelWinnerPlate");
+   if(el){el.textContent=name; el.classList.add("show")}
+   const center=document.querySelector(".wheel-center");
+   const title=center?.querySelector(".wheel-center-title");
+   center?.classList.add("winner-mode");if(title)title.textContent=name;
+ }
+}
+function resetVisuals(){
+ const r=document.getElementById("rocketWrap"); if(r)r.className="rocket-wrap real-rocket-wrap";
+ const sm=document.getElementById("rocketSmoke"); if(sm)sm.className="rocket-smoke";
+ const d=document.getElementById("vaultDoor"); if(d)d.className="vault-door";
+ const gg=document.getElementById("goldGlow"); if(gg)gg.className="gold-glow";
+ const p=document.getElementById("portal"); if(p)p.className="portal";
+ document.querySelectorAll(".crate").forEach(x=>x.className="gift crate");
+ const sp=document.getElementById("spotlight"); if(sp)sp.className="spotlight";
+ const ws=document.getElementById("scene-wheel"); if(ws){ws.classList.remove("spinning","wheel-win")}
+ const wc=document.querySelector(".wheel-center");wc?.classList.remove("winner-mode");
+ const wct=wc?.querySelector(".wheel-center-title");if(wct)wct.textContent="بَطَلَةُ التَّحَدِّي";
+ if(wheelRAF){cancelAnimationFrame(wheelRAF);wheelRAF=null}
+ hideSceneNames();
+ window.__selectedCrateIndex = null;
+}
+const GAME_ENCOURAGEMENT = {
+  rocket:"🚀 صَارُوخُ الْبَطَلَاتِ انْطَلَقَ بِاسْمِكِ!",
+  vault:"🔐 الْخَزْنَةُ الذَّهَبِيَّةُ كَشَفَتْ اسْمَكِ!",
+  portal:"🌌 بَوَّابَةُ الْإِبْدَاعِ اخْتَارَتْكِ!",
+  boxes:"🎁 صُنْدُوقُ الْمُفَاجَآتِ يَحْمِلُ اسْمَكِ!",
+  arena:"⚡ أَضْوَاءُ سَاحَةِ الْبَطَلَاتِ عَلَيْكِ!",
+  wheel:"🎡 عَجَلَةُ الْبَطَلَاتِ تَوَقَّفَتْ عِنْدَ اسْمِكِ!"
+};
+function pickEncouragement(){
+  const phrases=Array.isArray(config.phrases)?config.phrases.filter(Boolean):[];
+  const line=phrases.length?phrases[secureRandomInt(phrases.length)]:"هَيَّا يَا بَطَلَةَ الْفَلَاحِ!";
+  return (GAME_ENCOURAGEMENT[activeGame]||"✨ حَانَ دَوْرُكِ!")+"  "+line;
+}
+
+function showWinner(name){
+ const phrase=pickEncouragement();
+ document.getElementById("dockWinnerName").textContent=name;
+ document.getElementById("dockPhrase").textContent=phrase;
+ document.getElementById("resultDock").classList.add("show");
+ confetti();winSfx();clapSfx();
+
+ // The animation is finished now. Release the interaction lock immediately.
+ // This allows switching to another game without having to press "اختيار جديد" first.
+ busy=false;
+ document.getElementById("startBtn").disabled=false;
+}
+function closeWinner(){
+ clickSfx();
+ document.getElementById("resultDock").classList.remove("show");
+ resetVisuals();
+ busy=false;
+ document.getElementById("startBtn").disabled=false;
+ document.getElementById("nameScreen").classList.remove("spin");
+ document.getElementById("nameScreen").textContent=config.readyText||"جاهزات للتحدّي؟";
+}
+function celebrate(){
+ confetti(120);winSfx();clapSfx();
+ const phrase=pickEncouragement();
+ document.getElementById("dockPhrase").textContent=phrase;
+}
+function confetti(count=85){
+ const box=document.getElementById("stageConfetti") || document.getElementById("confetti");
+ if(!box) return;
+ box.innerHTML="";const colors=["#63e9ff","#ffd45d","#fff","#58f29a","#ff7a8b","#a98bff"];
+ for(let i=0;i<count;i++){const p=document.createElement("i");p.className="piece";p.style.left=Math.random()*100+"%";p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.animationDuration=(2.1+Math.random()*2.2)+"s";p.style.animationDelay=(Math.random()*.6)+"s";box.appendChild(p)}
+}
+function renderStatsOnly(){
+ const present=presentStudents();
+ document.getElementById("remainingCount").textContent=present.filter(n=>!used.includes(n)).length;
+ document.getElementById("chosenCount").textContent=used.filter(n=>present.includes(n)).length;
+ document.getElementById("absentCount").textContent=absent.length;
+ [...document.querySelectorAll(".name-chip")].forEach((el,i)=>{
+   const n=config.students[i];el.classList.toggle("used",used.includes(n));el.classList.toggle("absent",absent.includes(n))
+ })
+}
+
+function getActiveHistory(){
+ const cls=getActiveClass();return cls?(historyByClass[cls.id]||[]):[]
+}
+function getParticipation(){
+ const cls=getActiveClass();return cls?(participationByClass[cls.id]||{}):{}
+}
+function recordSelection(name){
+ const cls=getActiveClass();if(!cls)return;
+ const list=historyByClass[cls.id]||(historyByClass[cls.id]=[]);
+ list.push({name,game:config.games[activeGame]?.name||activeGame,ts:Date.now(),time:new Date().toLocaleTimeString("ar",{hour:"2-digit",minute:"2-digit"})});
+ const part=participationByClass[cls.id]||(participationByClass[cls.id]={});
+ part[name]=(part[name]||0)+1;
+}
+function renderLastPick(){
+ const h=getActiveHistory(),last=h[h.length-1];
+ const el=document.getElementById("lastPickSide");
+ if(el)el.textContent=last?"آخر اختيار: "+last.name:"آخر اختيار: —";
+}
+function renderHistory(){
+ const cls=getActiveClass(),h=getActiveHistory(),part=getParticipation();
+ document.getElementById("historyTitle").textContent="📋 سجل الجلسة — "+cls.name;
+ const unique=new Set(h.map(x=>x.name)).size;
+ document.getElementById("historyStats").innerHTML=
+   '<span class="history-stat">إجمالي الاختيارات: '+h.length+'</span>'+
+   '<span class="history-stat">طالبات شاركن: '+unique+'</span>'+
+   '<span class="history-stat">الحضور: '+presentStudents().length+'</span>';
+ const wrap=document.getElementById("historyList");wrap.innerHTML="";
+ if(!h.length){wrap.innerHTML='<div class="hint">لا توجد اختيارات في سجل هذه الجلسة بعد.</div>';return}
+ [...h].reverse().forEach((item,i)=>{
+   const d=document.createElement("div");d.className="history-item";
+   d.innerHTML='<span class="history-num">'+(h.length-i)+'</span><div><b>'+escapeHtml(item.name)+'</b><small>'+escapeHtml(item.game)+' · مرات المشاركة: '+(part[item.name]||1)+'</small></div><small>'+escapeHtml(item.time||"")+'</small>';
+   wrap.appendChild(d)
+ })
+}
+function openHistory(){renderHistory();document.getElementById("historyModal").classList.add("show");clickSfx()}
+function clearHistory(){
+ const cls=getActiveClass();if(!cls)return;
+ if(!confirm("مسح سجل الجلسة وإحصاءات المشاركة لهذه الشعبة؟"))return;
+
+ historyByClass[cls.id]=[];
+ participationByClass[cls.id]={};
+
+ // Clear any displayed result and guarantee that the game selector is usable.
+ document.getElementById("resultDock")?.classList.remove("show");
+ resetVisuals();
+ busy=false;
+ document.getElementById("startBtn").disabled=false;
+ document.getElementById("nameScreen").classList.remove("spin");
+ document.getElementById("nameScreen").textContent=config.readyText||"جاهزات للتحدّي؟";
+
+ saveConfig();
+ renderHistory();
+ renderLastPick();
+ renderStatsOnly();
+ refreshWheel();
+ clickSfx();
+}
+function undoLastPick(){
+ const cls=getActiveClass();if(!cls)return;
+ const h=historyByClass[cls.id]||[];
+ if(!h.length){alert("لا يوجد اختيار سابق للتراجع عنه.");return}
+ const last=h.pop(),part=participationByClass[cls.id]||{};
+ if(part[last.name]>1)part[last.name]--;else delete part[last.name];
+ const idx=used.lastIndexOf(last.name);if(idx>=0)used.splice(idx,1);
+ usedByClass[cls.id]=used;
+ document.getElementById("resultDock")?.classList.remove("show");
+ resetVisuals();busy=false;document.getElementById("startBtn").disabled=false;
+ document.getElementById("nameScreen").textContent="تم إرجاع "+last.name+" إلى الاختيار";
+ saveConfig();render();renderLastPick();if(document.getElementById("historyModal").classList.contains("show"))renderHistory();clickSfx()
+}
+async function sha256(text){
+ const data=new TextEncoder().encode(text),hash=await crypto.subtle.digest("SHA-256",data);
+ return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("")
+}
+async function guardTeacherAction(action){
+ if(BUILD_MODE!=="play"||!config.playPinHash){action();return}
+ const pin=prompt("أدخل PIN المعلمة:");
+ if(pin===null)return;
+ if(await sha256(pin)===config.playPinHash)action();else alert("PIN غير صحيح.")
+}
+function openAttendance(){guardTeacherAction(openAttendanceUnlocked)}
+function openAttendanceUnlocked(){
+ const cls=getActiveClass();document.getElementById("attendanceTitle").textContent="🧑‍🏫 الحضور والغياب — "+cls.name;
+ const wrap=document.getElementById("attendanceList");wrap.innerHTML="";
+ config.students.forEach(n=>{
+   const isAbsent=absent.includes(n),row=document.createElement("div");row.className="attendance-row"+(isAbsent?" absent":"");
+   row.innerHTML='<span>'+escapeHtml(n)+'</span><label><input type="checkbox" class="absence-check" value="'+escapeHtml(n)+'" '+(isAbsent?"checked":"")+'> غائبة</label>';
+   row.querySelector("input").addEventListener("change",()=>row.classList.toggle("absent",row.querySelector("input").checked));
+   wrap.appendChild(row)
+ });
+ updateAttendanceSummary();
+ document.getElementById("attendanceModal").classList.add("show");clickSfx()
+}
+function updateAttendanceSummary(){
+ const checks=[...document.querySelectorAll(".absence-check")],a=checks.filter(x=>x.checked).length;
+ const el=document.getElementById("attendanceSummary");if(el)el.textContent=(checks.length-a)+" حاضرة · "+a+" غائبة"
+}
+document.addEventListener("change",e=>{if(e.target.classList?.contains("absence-check"))updateAttendanceSummary()});
+function markAllPresent(){
+ document.querySelectorAll(".absence-check").forEach(x=>{x.checked=false;x.closest(".attendance-row")?.classList.remove("absent")});updateAttendanceSummary()
+}
+function saveAttendance(){
+ const cls=getActiveClass();
+ absent=[...document.querySelectorAll(".absence-check:checked")].map(x=>x.value);
+ absentByClass[cls.id]=absent;
+ used=used.filter(n=>!absent.includes(n));usedByClass[cls.id]=used;
+ saveConfig();render();refreshWheel();closeModal("attendanceModal");
+ document.getElementById("nameScreen").textContent="تم تحديث الحضور لـ "+cls.name
+}
+
+function openNames(){guardTeacherAction(openNamesUnlocked)}
+function openNamesUnlocked(){
+ const cls=getActiveClass();
+ document.getElementById("namesModalTitle").textContent="إدارة أسماء الطالبات — "+(cls?.name||"الشعبة");
+ document.getElementById("namesInput").value=(cls?.students||[]).join("\n");
+ document.getElementById("namesModal").classList.add("show");clickSfx()
+}
+function saveNames(){
+ const arr=document.getElementById("namesInput").value.split(/\n+/).map(s=>s.trim()).filter(Boolean);const unique=[...new Set(arr)];
+ if(!unique.length){alert("أدخلي اسم طالبة واحدًا على الأقل.");return}
+ const cls=getActiveClass();
+ cls.students=unique;config.students=cls.students;used=[];usedByClass[cls.id]=[];
+ absent=(absentByClass[cls.id]||[]).filter(n=>unique.includes(n));absentByClass[cls.id]=absent;
+ historyByClass[cls.id]=(historyByClass[cls.id]||[]).filter(x=>unique.includes(x.name));
+ const oldPart=participationByClass[cls.id]||{},newPart={};unique.forEach(n=>{if(oldPart[n])newPart[n]=oldPart[n]});participationByClass[cls.id]=newPart;
+ saveConfig();render();wheelRotation=0;renderWheel(wheelRotation);closeModal("namesModal");
+ document.getElementById("nameScreen").textContent="تم تحديث أسماء طالبات "+cls.name+"!";
+}
+function resetCycle(){
+ const cls=getActiveClass();
+ used=[];usedByClass[cls.id]=[];saveConfig();render();refreshWheel();
+ document.getElementById("resultDock")?.classList.remove("show");
+ document.getElementById("nameScreen").textContent="بدأت دورة جديدة لـ "+cls.name+"!";
+ clickSfx()
+}
+function toggleEffects(){effectsOn=!effectsOn;if(BUILD_MODE==="admin")config.effectsDefault=effectsOn;saveConfig();render();if(effectsOn)clickSfx()}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+
+/* ADMIN */
+function openAdmin(){if(BUILD_MODE!=="admin")return;fillAdmin();document.getElementById("adminModal").classList.add("show");clickSfx()}
+function fillAdmin(){
+ cfgTitle.value=config.title;cfgSchool.value=config.school;cfgTeacher.value=config.teacher;cfgReady.value=config.readyText;
+ cfgNoRepeat.checked=config.noRepeat;cfgAllowRandomMode.checked=config.allowRandomMode;cfgPlayPin.value="";cfgPlayPin.placeholder=config.playPinHash?"PIN مضبوط حاليًا — اتركه فارغًا للإبقاء عليه":"اتركه فارغًا بدون حماية";cfgEffectsDefault.value=String(config.effectsDefault);
+ cfgPhrases.value=config.phrases.join("\n");cfgAccent.value=config.accent;cfgBg.value=config.bg;cfgStars.checked=config.stars;
+ renderClassesAdmin();
+ const wrap=document.getElementById("gamesConfig");wrap.innerHTML="";
+ Object.keys(GAME_META).forEach(k=>{
+  const g=config.games[k];const row=document.createElement("div");row.className="game-config";
+  row.innerHTML='<label class="checkline" style="margin:0"><input type="checkbox" data-game-enabled="'+k+'" '+(g.enabled?"checked":"")+'> '+GAME_META[k].icon+' تفعيل</label>'+
+  '<input data-game-name="'+k+'" value="'+escapeHtml(g.name)+'" aria-label="اسم اللعبة">'+
+  '<input data-game-start="'+k+'" value="'+escapeHtml(g.start)+'" aria-label="زر البدء">';
+  wrap.appendChild(row)
+ })
+}
+function appendClassAdminCard(cls){
+ const wrap=document.getElementById("classesConfig");
+ const card=document.createElement("div");
+ card.className="class-admin-card";
+ card.dataset.classId=cls.id;
+ const count=(cls.students||[]).length;
+ card.innerHTML=
+   '<div class="class-admin-card-head">'+
+     '<input class="class-name-input" value="'+escapeHtml(cls.name)+'" placeholder="اسم الصف / الشعبة">'+
+     '<button class="btn danger" type="button" onclick="removeClassAdmin(this)">🗑️</button>'+
+   '</div>'+
+   '<textarea class="class-students-input" placeholder="اسم طالبة في كل سطر">'+escapeHtml((cls.students||[]).join("\n"))+'</textarea>'+
+   '<span class="class-count-badge">'+count+' طالبة</span>';
+ wrap.appendChild(card);
+}
+function renderClassesAdmin(){
+ const wrap=document.getElementById("classesConfig");
+ if(!wrap) return;
+ wrap.innerHTML="";
+ config.classes.forEach(appendClassAdminCard);
+}
+function addClassAdmin(){
+ const id="class-"+Date.now()+"-"+Math.floor(Math.random()*1000);
+ appendClassAdminCard({id,name:"شعبة جديدة",students:[]});
+ const cards=[...document.querySelectorAll(".class-admin-card")];
+ cards[cards.length-1]?.querySelector(".class-name-input")?.focus();
+}
+function removeClassAdmin(btn){
+ const cards=[...document.querySelectorAll(".class-admin-card")];
+ if(cards.length<=1){alert("يجب الإبقاء على شعبة واحدة على الأقل.");return}
+ btn.closest(".class-admin-card")?.remove();
+}
+function readClassesFromAdmin(){
+ return [...document.querySelectorAll(".class-admin-card")].map((card,i)=>{
+   const name=card.querySelector(".class-name-input").value.trim()||("الشعبة "+(i+1));
+   const students=[...new Set(card.querySelector(".class-students-input").value.split(/\n+/).map(s=>s.trim()).filter(Boolean))];
+   return {id:card.dataset.classId||("class-"+Date.now()+"-"+i),name,students};
+ });
+}
+function clearPlayPinAdmin(){
+ config.playPinHash="";
+ const el=document.getElementById("cfgPlayPin");if(el){el.value="";el.placeholder="لا توجد حماية PIN حاليًا"}
+ alert("تم إلغاء PIN. اضغط حفظ وتطبيق لتثبيت التغيير.")
+}
+function switchTab(btn){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ document.querySelectorAll(".tab-page").forEach(x=>x.classList.remove("active"));document.getElementById("tab-"+btn.dataset.tab).classList.add("active")
+}
+async function saveAdmin(){
+ saveCurrentClassState();
+ const newClasses=readClassesFromAdmin();
+ if(!newClasses.length){alert("يجب وجود شعبة واحدة على الأقل.");return}
+ config.classes=newClasses;
+ if(!config.classes.some(c=>c.id===config.activeClassId)) config.activeClassId=config.classes[0].id;
+ [usedByClass,absentByClass,historyByClass,participationByClass].forEach(store=>Object.keys(store).forEach(id=>{if(!config.classes.some(c=>c.id===id)) delete store[id]}));
+ syncActiveClass();
+ config.title=cfgTitle.value.trim()||DEFAULT_CONFIG.title;config.school=cfgSchool.value.trim();config.teacher=cfgTeacher.value.trim();config.readyText=cfgReady.value.trim()||"جاهزات للتحدّي؟";
+ config.noRepeat=cfgNoRepeat.checked;config.allowRandomMode=cfgAllowRandomMode.checked;
+ const pin=cfgPlayPin.value.trim();if(pin)config.playPinHash=await sha256(pin);
+ config.effectsDefault=cfgEffectsDefault.value==="true";
+ config.phrases=cfgPhrases.value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+ config.accent=cfgAccent.value;config.bg=cfgBg.value;config.stars=cfgStars.checked;
+ Object.keys(GAME_META).forEach(k=>{
+  config.games[k].enabled=document.querySelector('[data-game-enabled="'+k+'"]').checked;
+  config.games[k].name=document.querySelector('[data-game-name="'+k+'"]').value.trim()||GAME_META[k].defaultName;
+  config.games[k].start=document.querySelector('[data-game-start="'+k+'"]').value.trim()||GAME_META[k].start;
+ });
+ if(!enabledGames().length){config.games.rocket.enabled=true}
+ normalize();syncActiveClass();
+ effectsOn=config.effectsDefault;saveConfig();render();closeModal("adminModal");document.getElementById("nameScreen").textContent="تم حفظ الإعدادات!";
+}
+
+/* Self-contained XLSX reader: ZIP central directory + browser DecompressionStream */
+function bytesToText(bytes){return new TextDecoder("utf-8").decode(bytes)}
+async function unzipXlsx(file){
+ const buf=await file.arrayBuffer(),dv=new DataView(buf),u8=new Uint8Array(buf);
+ let eocd=-1;
+ for(let i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){
+   if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}
+ }
+ if(eocd<0)throw new Error("ملف Excel غير صالح (ZIP EOCD غير موجود).");
+ const total=dv.getUint16(eocd+10,true),central=dv.getUint32(eocd+16,true);
+ let p=central;const entries={};
+ for(let e=0;e<total;e++){
+   if(dv.getUint32(p,true)!==0x02014b50)break;
+   const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true);
+   const nlen=dv.getUint16(p+28,true),xlen=dv.getUint16(p+30,true),clen=dv.getUint16(p+32,true),local=dv.getUint32(p+42,true);
+   const name=bytesToText(u8.slice(p+46,p+46+nlen));
+   const ln=dv.getUint16(local+26,true),lx=dv.getUint16(local+28,true),start=local+30+ln+lx;
+   const comp=u8.slice(start,start+csize);
+   let data;
+   if(method===0)data=comp;
+   else if(method===8){
+     if(typeof DecompressionStream==="undefined")throw new Error("المتصفح لا يدعم فك ضغط XLSX. استخدم Chrome/Edge حديثًا أو CSV.");
+     const ds=new DecompressionStream("deflate-raw");
+     data=new Uint8Array(await new Response(new Blob([comp]).stream().pipeThrough(ds)).arrayBuffer());
+   }else throw new Error("طريقة ضغط Excel غير مدعومة: "+method);
+   entries[name]=data;p+=46+nlen+xlen+clen;
+ }
+ return entries
+}
+function xmlDoc(bytes){return new DOMParser().parseFromString(bytesToText(bytes),"application/xml")}
+function cellCol(ref){
+ const m=String(ref||"").match(/[A-Z]+/);if(!m)return 0;let n=0;
+ for(const ch of m[0])n=n*26+ch.charCodeAt(0)-64;return n
+}
+function extractSheetNames(rows){
+ const byCol={};
+ rows.forEach(r=>Object.entries(r).forEach(([c,v])=>{
+   if(typeof v!=="string")return;
+   const s=v.trim();
+   if(!s||/^(?:الاسم|اسم الطالبة|اسم الطالب|أسماء الطالبات|اسماء الطالبات|الصف(?:\s+والشعبة)?|الشعبة|الدرجة|الدرجات|رقم\s*الطالبة|م|الرقم)$/i.test(s))return;
+   const letters=(s.match(/[\u0600-\u06FFa-zA-Z]/g)||[]).length;
+   if(letters<3)return;(byCol[c]||(byCol[c]=[])).push(s)
+ }));
+ const cols=Object.entries(byCol).sort((a,b)=>b[1].length-a[1].length);
+ if(!cols.length)return [];
+ return [...new Set(cols[0][1])].filter(x=>x.length>=3)
+}
+async function parseXlsxClasses(file){
+ const entries=await unzipXlsx(file);
+ const wb=xmlDoc(entries["xl/workbook.xml"]);
+ const rel=xmlDoc(entries["xl/_rels/workbook.xml.rels"]);
+ const rels={};[...rel.getElementsByTagName("*")].filter(x=>x.localName==="Relationship").forEach(x=>rels[x.getAttribute("Id")]=x.getAttribute("Target"));
+ let shared=[];
+ if(entries["xl/sharedStrings.xml"]){
+   const sd=xmlDoc(entries["xl/sharedStrings.xml"]);
+   shared=[...sd.getElementsByTagName("*")].filter(x=>x.localName==="si").map(si=>[...si.getElementsByTagName("*")].filter(x=>x.localName==="t").map(t=>t.textContent||"").join(""))
+ }
+function normalizeImportedClassName(raw){
+  const compact=String(raw||"").trim().replace(/\s+/g,"");
+  const latin=(compact.match(/[ABCD]/i)||[])[0]?.toUpperCase();
+  if(/ثالث/.test(compact)&&latin){return "الصف الثالث ("+({A:"أ",B:"ب",C:"ج",D:"د"}[latin])+")";}
+  return String(raw||"").trim();
+}
+ const sheets=[...wb.getElementsByTagName("*")].filter(x=>x.localName==="sheet");
+ const out=[];
+ for(let i=0;i<sheets.length;i++){
+   const sh=sheets[i],name=normalizeImportedClassName(sh.getAttribute("name")||("الشعبة "+(i+1)));
+   const rid=sh.getAttribute("r:id")||sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
+   let target=rels[rid];if(!target)continue;
+   if(target.startsWith("/"))target=target.slice(1);else if(!target.startsWith("xl/"))target="xl/"+target.replace(/^\.?\//,"");
+   const bytes=entries[target];if(!bytes)continue;
+   const doc=xmlDoc(bytes),rowsMap={};
+   const cells=[...doc.getElementsByTagName("*")].filter(x=>x.localName==="c");
+   cells.forEach(c=>{
+     const ref=c.getAttribute("r")||"",rowNum=parseInt((ref.match(/\d+/)||["0"])[0]),col=cellCol(ref);
+     if(!rowNum||!col)return;
+     const t=c.getAttribute("t");let value="";
+     const v=[...c.children].find(x=>x.localName==="v");
+     if(t==="s"&&v)value=shared[Number(v.textContent)]||"";
+     else if(t==="inlineStr")value=[...c.getElementsByTagName("*")].filter(x=>x.localName==="t").map(x=>x.textContent||"").join("");
+     else if(v)value=v.textContent||"";
+     if(!rowsMap[rowNum])rowsMap[rowNum]={};rowsMap[rowNum][col]=String(value).trim()
+   });
+   const students=extractSheetNames(Object.values(rowsMap));
+   if(students.length)out.push({id:"class-"+Date.now()+"-"+i,name,students})
+ }
+ return out
+}
+async function handleExcelImport(file){
+ if(!file)return;
+ try{
+   let classes=[];
+   const lower=file.name.toLowerCase();
+   if(lower.endsWith(".csv")||lower.endsWith(".tsv")){
+     const txt=await file.text(),sep=lower.endsWith(".tsv")?"\t":",";
+     const lines=txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+     const students=[...new Set(lines.map(x=>x.split(sep)[0].replace(/^"|"$/g,"").trim()).filter(x=>x&&!/^(الاسم|اسم الطالبة)$/i.test(x)))];
+     classes=[{id:"class-"+Date.now(),name:file.name.replace(/\.[^.]+$/,""),students}]
+   }else classes=await parseXlsxClasses(file);
+   if(!classes.length)throw new Error("لم أتمكن من استخراج قوائم طالبات من الملف.");
+   if(!confirm("تم العثور على "+classes.length+" شُعب. هل تريد استبدال الصفوف الحالية بالصفوف المستوردة؟"))return;
+   config.classes=classes;config.activeClassId=classes[0].id;usedByClass={};absentByClass={};historyByClass={};participationByClass={};syncActiveClass();
+   saveConfig();render();if(document.getElementById("adminModal").classList.contains("show"))renderClassesAdmin();
+   alert("تم استيراد "+classes.length+" شُعب بنجاح.")
+ }catch(err){console.error(err);alert("تعذر استيراد الملف: "+(err.message||err))}
+ finally{document.getElementById("excelImportInput").value=""}
+}
+async function importSettingsFile(file){
+ if(!file)return;
+ try{
+   const incoming=JSON.parse(await file.text());
+   if(!incoming||!Array.isArray(incoming.classes)||!incoming.classes.length)throw new Error("ملف الإعدادات غير صالح.");
+   if(!confirm("استعادة الإعدادات ستستبدل إعدادات اللعبة الحالية. متابعة؟"))return;
+   config=mergeDeep(DEFAULT_CONFIG,incoming);migrateClasses();usedByClass={};absentByClass={};historyByClass={};participationByClass={};syncActiveClass();
+   effectsOn=config.effectsDefault;
+   saveConfig();render();closeModal("adminModal");alert("تمت استعادة الإعدادات بنجاح.")
+ }catch(err){alert("تعذر استعادة الإعدادات: "+(err.message||err))}
+ finally{document.getElementById("settingsImportInput").value=""}
+}
+
+async function exportPlayOnly(){
+ // Save the latest teacher edits before producing the clean standalone student version.
+ await saveAdmin();
+ const exported=deepClone(config);
+ delete exported.students; // the four groups remain exclusively under classes
+ exported.exportId=(globalThis.crypto?.randomUUID?.()||("export-"+Date.now()+"-"+Math.random().toString(36).slice(2)));
+ const clone=document.documentElement.cloneNode(true);
+ clone.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show"));
+ clone.querySelectorAll(".admin-only").forEach(el=>el.remove());
+ clone.querySelectorAll(".stage-visual").forEach(x=>x.classList.remove("active"));
+ clone.querySelector("#scene-rocket")?.classList.add("active");
+ clone.querySelector("#resultDock")?.classList.remove("show");
+ clone.querySelector("#nameScreen").textContent=exported.readyText||"جاهزات للتحدّي؟";
+ clone.querySelector("#dockWinnerName").textContent="";
+ clone.querySelector("#dockPhrase").textContent="";
+ clone.querySelectorAll(".modal textarea").forEach(x=>x.textContent="");
+ clone.querySelectorAll(".stage-confetti, #confetti").forEach(x=>x.innerHTML="");
+ const injected=document.createElement("script");
+ injected.textContent='window.__BUILD_MODE__="play";window.__EXPORTED_CONFIG__='+JSON.stringify(exported).replace(/</g,"\\u003c")+';';
+ clone.querySelector("head").appendChild(injected);
+ const out="<!DOCTYPE html>\n"+clone.outerHTML;
+ downloadBlob(new Blob([out],{type:"text/html;charset=utf-8"}),"نسخة_الطالبات_"+safeFile(config.school)+".html");
+}
+function exportSettings(){
+ const backup=deepClone(config);
+ const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json;charset=utf-8"});downloadBlob(blob,"إعدادات_"+safeFile(config.title)+".json")
+}
+function safeFile(s){return (s||"اللعبة").replace(/[\\/:*?"<>|]/g,"_").replace(/\s+/g,"_")}
+function downloadBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+document.addEventListener("keydown",e=>{
+ if(e.code==="Space"&&!document.querySelector(".modal.show")&&!busy){e.preventDefault();startSelection()}
+ if(e.key==="Escape")document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show"))
+});
+render();
+</script>
+
+</body></html>
