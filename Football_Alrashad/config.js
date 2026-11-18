@@ -16,7 +16,7 @@ window.FOOTBALL_PACKAGE={
   "teacher": "سلوى بدر",
   "coordinator": "آمنه المضاحكة",
   "classroom": "الرابع",
-  "duration": 20,
+  "duration": 0,
   "shuffle": false,
   "questions": [
     {
@@ -25,7 +25,7 @@ window.FOOTBALL_PACKAGE={
         "يقل",
         "يزداد",
         "يبقى كما هو",
-        "يقل معدل ضربات القلب ويزداد تدفق الدم"
+        "لا يزيد ولا يقل"
       ],
       "correct": 1
     },
@@ -45,7 +45,7 @@ window.FOOTBALL_PACKAGE={
         "التعرق",
         "قلة التركيز",
         "تكوين المخاط في الأنف",
-        "إذابة المعادن والمواد الغذائية والأملاح المعدنية"
+        "تكوين اللعاب في الفم"
       ],
       "correct": 3
     },
@@ -72,7 +72,7 @@ window.FOOTBALL_PACKAGE={
     {
       "text": "أي التمارين الرياضية الآتية يزيد من معدل التنفس ومعدل نبضات القلب؟",
       "options": [
-        "المشي",
+        "اليوغا",
         "صيد السمك",
         "الوقوف على اليدين",
         "الجري لمسافات بعيدة"
@@ -112,7 +112,7 @@ window.FOOTBALL_PACKAGE={
     {
       "text": "أي الآتي من أعراض الجفاف؟",
       "options": [
-        "العطش",
+        "تشقق الشفتين",
         "تكوين اللعاب",
         "تكوين المخاط في الأنف",
         "إذابة المعادن والمواد الغذائية والأملاح المعدنية"
@@ -120,5 +120,5 @@ window.FOOTBALL_PACKAGE={
       "correct": 0
     }
   ],
-  "packageId": "football-export-offline-v23-mwlsumwn"
+  "packageId": "football-export-offline-v23-mwm10vtv"
 };
